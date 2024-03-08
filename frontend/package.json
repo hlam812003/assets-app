@@ -11,15 +11,21 @@
   },
   "dependencies": {
     "@nuxt/ui": "^2.14.2",
+    "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.10.3",
+    "pinia": "^2.1.7",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@nuxt/image": "^1.4.0",
+    "@nuxtjs/tailwindcss": "^6.11.4",
     "autoprefixer": "^10.4.18",
     "postcss": "^8.4.35",
     "postcss-import": "^16.0.1",
     "postcss-nesting": "^12.1.0",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.2",
+    "vue-tsc": "^1.8.27"
   }
 }
