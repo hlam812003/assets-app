@@ -25,6 +25,7 @@ https://vntalking.com/xay-dung-ung-dung-web-voi-nodejs-expressjs.html
 ----------------------------------------------------------------
 ### Middleware
 https://200lab.io/blog/middleware-la-gi/
+https://anonystick.com/blog-developer/phan-quyen-trong-nodejs-expressjs-qua-vi-du-cu-the-kem-source-code-2021031724558029 (Bắt buộc xem)
 
 ----------------------------------------------------------------
 ### ExpressJS Route
