@@ -17,9 +17,14 @@ async function getMultiple(page = 1) {
 }
 async function loginUser(username, password) {
     try {
-        const [rows] = await this.pool.execute('SELECT * FROM authentication WHERE username = ? AND password = ?', [username, password]);
-        if (rows.length === 1) {
-            return rows[0]; // Return user data if found
+        const [rows] = await db.query('SELECT * FROM authentication WHERE username = ? AND password = ?', [username, password]);
+        
+        // Close the connection
+        //await connection.end();
+        if (Object.keys(rows).length === 3) {
+            console.log(rows)
+            return rows; // Return user data if found
+
         } else {
             return null; // Return null if user not found or password incorrect
         }
@@ -29,5 +34,5 @@ async function loginUser(username, password) {
     }
 }
 module.exports = {
-    getMultiple
+    getMultiple,loginUser
 }
