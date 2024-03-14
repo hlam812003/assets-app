@@ -1,0 +1,8 @@
+.main__login {
+    @apply w-full min-h-[100vh] bg-[url('/loginPage.png')] bg-center bg-no-repeat relative overflow-hidden;     
+    background-size: 100% 100%;
+}
+
+.main__login .login__wrapper {
+    @apply mt-[9.85rem] ml-[11.15rem];
+}

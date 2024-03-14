@@ -1,0 +1,11 @@
+.main__home {
+    @apply w-full min-h-[100vh] bg-black relative overflow-hidden;
+}
+
+.main__home img {
+    @apply absolute bottom-[-29%] left-1/2 translate-x-[-50%] translate-y-[-50%] w-[88rem] h-[448px];
+}
+
+.main__home main {
+    @apply w-full h-[230px] flex flex-col items-center justify-center;
+}

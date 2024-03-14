@@ -1,4 +1,5 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default <Partial<Config>>{
     content: [
@@ -11,9 +12,13 @@ export default <Partial<Config>>{
     ],
     theme: {
         fontFamily: {
-
+            sans: ['Poppins', 'sans-serif'],
         },
-        extend: {}
+        extend: {
+            fontSize: {
+                base: '62.5%',
+            },
+        }
     },
     plugins: [],
 };
