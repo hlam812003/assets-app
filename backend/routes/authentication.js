@@ -1,23 +1,15 @@
 const express = require('express');
-const User = require('./User'); // Assuming User model is in the same directory
 const router = express.Router();
-const pool = require('./index'); // Import the pool object from index.js
-// Create a new instance of the User model
-
-const user = new User(pool);
-
-router.get('/' ,async (req, res) => {
-    return res.json({
-        status: "SUCCESS",
-        message: "User signed in successfully"})
-})
+const user = require('../services/user');
 
 // Sign-in route
-router.post('/signin', async (req, res) => {
+router.post('/', async (req, res) => {
     let { username, password } = req.body;
     username = username.trim();
     password = password.trim();
-
+    console.log(username)
+    console.log(password)
+    
     try {
         // Validate input fields
         if (username === "" || password === "") {
@@ -30,6 +22,7 @@ router.post('/signin', async (req, res) => {
         // Authenticate user
         const userData = await user.loginUser(username, password);
         if (userData) {
+
             return res.json({
                 status: "SUCCESS",
                 message: "User signed in successfully",

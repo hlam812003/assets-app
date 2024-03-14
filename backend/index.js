@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const userRouter = require("./routes/user");
-
+const authenticationRouter = require("./routes/authentication")
 app.use(express.json());
 
 app.use(
@@ -16,6 +16,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
+
+app.use("/signin", authenticationRouter);
 /* Error handler middleware */
 
 app.use((err, req, res, next) => {
