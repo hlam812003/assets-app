@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require('cors');
 const app = express();
+const bodyParser = require('body-parser');
 const port = 3001;
 const userRouter = require("./routes/user");
 const authenticationRouter = require("./routes/authentication")
 const seachRouter = require("./routes/search")
+const assetRouter = require('./routes/asset');
 
 app.use(express.json());
 
@@ -17,6 +19,10 @@ app.use(
         extended: true,
     })
 );
+// Use the route/asset
+app.use('/assets', assetRouter);
+
+
 
 app.get("/", (req, res) => {
     res.json({ message: "ok" });

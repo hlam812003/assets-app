@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const user = require('../services/user');
 const db = require('../services/db');
+
 router.get('/', async function (req, res, next) {
     try {
         res.json(await user.searchAsset(req.query.page));
