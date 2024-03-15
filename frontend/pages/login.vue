@@ -64,6 +64,7 @@ async function onFormSubmit(): Promise<void> {
         
         if (res && res.status === 'SUCCESS') {
             userStore.setUser({ username: userName.value, password: passWord.value });
+            userStore.isLoggedIn = true;
 
             setTimeout(() => {
                 isLoading.value = false;
@@ -101,7 +102,6 @@ async function onFormSubmit(): Promise<void> {
 
 definePageMeta({
   layout: false,
-  middleware: ['auth']
 });
 
 useHead({
