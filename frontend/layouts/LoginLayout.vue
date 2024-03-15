@@ -3,6 +3,10 @@
         <div class="login__wrapper">
             <slot />
         </div>
+        <div class="contact__wrapper">
+            <p class="contact__text">Contact us via:</p>
+            <img src="/socialIcons.png">
+        </div>
     </section>
 </template>
 

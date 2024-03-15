@@ -3,8 +3,8 @@ const config = {
     /* don't expose password or any sensitive info, done only for demo */
     host: "localhost",
     user: "root",
-    password: "admin",
-    database: "assets-app",
+    password: "root",
+    database: "HighSchoolAssetManagement",
     connectTimeout: 60000
   },
   listPerPage: 10,

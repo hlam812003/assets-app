@@ -6,13 +6,11 @@
                 <!-- <p>{{ userInfo.value?.username }}</p> -->
             </div>
             <div else>
-                <div class="flex items-center">
-                    <NuxtLink to="/login">
-                        <button class="font-sans border-[#2A2B3A]"> 
-                            sign in
-                        </button>
-                    </NuxtLink>
-                </div>
+                <NuxtLink to="/login">
+                    <button class="font-sans border-[#2A2B3A] hover:border-[#7241FF] hover:shadow hover:shadow-[#74F] transition-all"> 
+                        sign in
+                    </button>
+                </NuxtLink>
             </div>
         </div>
     </div>

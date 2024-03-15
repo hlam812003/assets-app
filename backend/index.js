@@ -1,12 +1,16 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const port = 3001;
 const userRouter = require("./routes/user");
 const authenticationRouter = require("./routes/authentication")
 const seachRouter = require("./routes/search")
 
-
 app.use(express.json());
+
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 
 app.use(
     express.urlencoded({

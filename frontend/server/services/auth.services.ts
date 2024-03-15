@@ -5,7 +5,7 @@ interface LoginData {
     password?: string;
 };
 
-const login = async (data: LoginData): Promise<void> => {
+const login = async (data: LoginData): Promise<any> => {
     try {
         const res = await axios.post('http://localhost:3001/signin', data);
         console.log(res);
