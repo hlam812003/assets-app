@@ -2,23 +2,28 @@
     <div id="Navbar" class="main__nav">
         <img src="/logo.png">
         <div class="nav__buttons--wrapper">
-            <NuxtLink to="/login">
-                <button class="font-sans border-[#2A2B3A]"> 
-                    sign in
-                </button>
-            </NuxtLink>
-
-            <NuxtLink to="/signup">
-                <button class="font-sans border-[#7241FF] shadow shadow-[#74F]"> 
-                    sign up
-                </button>
-            </NuxtLink>
+            <div>
+                <!-- <p>{{ userInfo.value?.username }}</p> -->
+            </div>
+            <div else>
+                <div class="flex items-center">
+                    <NuxtLink to="/login">
+                        <button class="font-sans border-[#2A2B3A]"> 
+                            sign in
+                        </button>
+                    </NuxtLink>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { type Ref, ref, watch, computed } from 'vue';
 
+// const userStore = useUserStore();
+// const isLoggedIn = computed(() => userStore.isLoggedIn);
+// const userInfo: ComputedRef<UserInfo | null> = computed(() => userStore.userInfo);
 </script>
 
 <style scoped>
