@@ -4,7 +4,11 @@ const config = {
     host: "localhost",
     user: "root",
     password: "admin",
+<<<<<<< Updated upstream
     database: "assets-app",
+=======
+    database: "HighSchoolAssetManagement",
+>>>>>>> Stashed changes
     connectTimeout: 60000
   },
   listPerPage: 10,
