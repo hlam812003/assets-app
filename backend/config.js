@@ -3,7 +3,7 @@ const config = {
     /* don't expose password or any sensitive info, done only for demo */
     host: "localhost",
     user: "root",
-    password: "root",
+    password: "admin",
     database: "HighSchoolAssetManagement",
     connectTimeout: 60000
   },

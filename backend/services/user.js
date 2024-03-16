@@ -35,17 +35,17 @@ async function loginUser(username, password) {
 }
 
 async function searchAsset(search_query) {
-    var query = `SELECT asset_name FROM asset WHERE asset LIKE '%${search_query}%'LIMIT 10`;
-    const rows = await db.query(query, function(error, data,fields){
-        if(err) throw err;
-        var data = [];
-        for(i=0;i<rows.length;i++){
-            data.push(rows[i].product);
-        }
-        res.end(JSON.stringify(data));
-        console.log(req.params.input);
-    })
-    return rows
+    try {
+        var query = `SELECT * FROM asset WHERE asset_name LIKE '%${search_query}%' LIMIT 10`;
+        const rows = await db.query(`SELECT * FROM asset WHERE asset_name LIKE '%${search_query}%' LIMIT 10`);
+
+        console.log(rows)
+
+        return rows;
+    } catch (error) {
+        console.error('Error occurred while searching asset:', error);
+        throw error;
+    }
 }
 module.exports = {
     getMultiple,loginUser,searchAsset
