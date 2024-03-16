@@ -2,10 +2,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   pages: true,
-  typescript: {
-    strict: true,
-    typeCheck: true
-  },
   css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {
@@ -15,11 +11,14 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ['@nuxt/ui', '@pinia/nuxt', "@nuxt/image"],
-  pinia: {
-    storesDirs: ['./stores/**', './custom-folder/stores/**'],
-  },
-  imports: {
-    dirs: ['./stores']
-  }
+  modules: [
+    '@nuxt/ui',
+    'nuxt-icon',
+    [
+      '@pinia/nuxt', { 
+        disableVuex: false,
+        autoImports: ['defineStore']
+      }
+  ],
+  ]
 })

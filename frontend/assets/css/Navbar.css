@@ -1,0 +1,11 @@
+.main__nav {
+    @apply w-full h-[47px] px-11 py-12 flex items-center justify-between;
+}
+
+.main__nav .nav__buttons--wrapper {
+    @apply flex items-center gap-[18px];
+}
+
+.main__nav .nav__buttons--wrapper button {
+    @apply w-[116px] h-[43px] flex items-center justify-center text-white font-medium capitalize text-[16px] rounded-[40px] border-solid border-[3px];
+}
