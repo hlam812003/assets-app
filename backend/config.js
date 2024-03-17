@@ -1,9 +1,8 @@
 const config = {
   db: {
-    /* don't expose password or any sensitive info, done only for demo */
     host: "localhost",
     user: "root",
-    password: "admin",
+    password: "root",
     database: "HighSchoolAssetManagement",
     connectTimeout: 60000
   },

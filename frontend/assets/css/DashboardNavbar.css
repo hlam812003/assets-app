@@ -1,0 +1,28 @@
+.main__nav {
+    @apply w-full h-[27px] pl-[27px] pr-[42px] py-[37px] flex items-center justify-between border border-[#0000001a];
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.main__nav .nav__logo--wrapper {
+    @apply flex items-center gap-[73px];
+}
+
+.main__nav img:first-child {
+    @apply h-[26px];
+}
+
+.main__nav .nav__logo--wrapper .menu__icon {
+    @apply w-[50px] h-[50px];
+}
+
+.main__nav .nav__actions--wrapper {
+    @apply flex items-center gap-[17px];
+}
+
+.main__nav .nav__actions--wrapper p {
+    @apply font-sans text-[20px] font-normal text-[#F6F0DB];
+}
+
+.main__nav .nav__actions--wrapper img {
+    @apply w-[15px] h-[10px];
+}

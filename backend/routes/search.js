@@ -3,9 +3,7 @@ const router = express.Router();
 const user = require('../services/user');
 const db = require('../services/db');
 
-router.get('/', async function (req, res, next) {
 router.post('/', async function (req, res, next) {
-
     try {
         const searchResult = await user.searchAsset(req.body.search_query);
         res.json(searchResult);

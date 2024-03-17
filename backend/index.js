@@ -1,12 +1,15 @@
+require('dotenv').config();
+
 const express = require("express");
 const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
-const port = 3001;
 const userRouter = require("./routes/user");
 const authenticationRouter = require("./routes/authentication")
 const seachRouter = require("./routes/search")
 const assetRouter = require('./routes/asset');
+
+let PORT = 3001;
 
 app.use(express.json());
 
@@ -21,8 +24,6 @@ app.use(
 );
 // Use the route/asset
 app.use('/assets', assetRouter);
-
-
 
 app.get("/", (req, res) => {
     res.json({ message: "ok" });
@@ -41,6 +42,6 @@ app.use((err, req, res, next) => {
     return;
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Example app listening at localhost:${PORT}`);
 });

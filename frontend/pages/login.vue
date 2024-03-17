@@ -87,6 +87,8 @@ async function onFormSubmit(): Promise<void> {
                 description: res?.message || "Incorrect username or password, please try again!",
                 timeout: 3000
             });
+
+            setTimeout(() => isLoading.value = false, 1500);
         }
     } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'An error occurred, please try again later!';

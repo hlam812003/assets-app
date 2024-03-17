@@ -5,8 +5,14 @@
 </template>
 
 <script setup lang="ts">
+// import { useUserStore } from '~/stores/User';
+
 definePageMeta({
     layout: false,
-    middleware: 'auth'
+    // middleware: 'auth'
+});
+
+useHead({
+    title: 'Trang Quản Trị',
 });
 </script>

@@ -1,6 +1,9 @@
 export interface UserInfo {
     username?: string;
     password?: string;
+    firstName?: string;
+    lastName?: string;
+    role?: string;
 }
 
 export const useUserStore = defineStore('user', {
