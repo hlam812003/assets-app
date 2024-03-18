@@ -1,47 +1,56 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const express = require("express");
-const cors = require('cors');
-const app = express();
-const bodyParser = require('body-parser');
-const userRouter = require("./routes/user");
-const authenticationRouter = require("./routes/authentication")
-const seachRouter = require("./routes/search")
-const assetRouter = require('./routes/asset');
+const cors = require("cors");
+const morgan = require("morgan");
 
-let PORT = 3001;
+const isHttpError = require("http-errors");
+const createHttpError = require("http-errors");
+const userRouter = require("./routes/user");
+const assetRouter = require("./routes/asset");
+
+const PORT = 3001;
+
+const app = express();
+
+app.use(morgan("dev"));
 
 app.use(express.json());
 
-app.use(cors({
-    origin: 'http://localhost:3000'
-}));
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+	})
+);
 
 app.use(
-    express.urlencoded({
-        extended: true,
-    })
+	express.urlencoded({
+		extended: true,
+	})
 );
-// Use the route/asset
-app.use('/assets', assetRouter);
 
 app.get("/", (req, res) => {
-    res.json({ message: "ok" });
+	res.json({ message: "ok" });
 });
 
 app.use("/user", userRouter);
+app.use("/asset", assetRouter);
 
-app.use("/signin", authenticationRouter);
-/* Error handler middleware */
-app.use("/search", seachRouter)
+app.use((req, res, next) => {
+	next(createHttpError(404, "Endpoint not found!"));
+});
 
-app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    console.error(err.message, err.stack);
-    res.status(statusCode).json({ message: err.message });
-    return;
+app.use((error, req, res, next) => {
+	console.error(error);
+	let errorMessage = "An unknown error occurred!";
+	let statusCode = 500;
+	if (isHttpError(error)) {
+		statusCode = error.status;
+		errorMessage = error.message;
+	}
+	res.status(statusCode).json({ error: errorMessage });
 });
 
 app.listen(PORT, () => {
-    console.log(`Example app listening at localhost:${PORT}`);
+	console.log("Server running on port: " + PORT);
 });

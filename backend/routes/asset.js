@@ -1,17 +1,16 @@
-const express = require('express');
+const express = require("express");
+const AssetService = require("../services/asset");
+
 const router = express.Router();
-const db = require('../services/db');
-const assetService = require('../services/asset');
 
+router.get("/", AssetService.getAssets); // search_query
 
-router.get('/', async (req, res) => {
-    try {
-        const assets = await assetService.getAssets();
-        res.json(assets);
-    } catch (error) {
-        console.error('Error fetching assets:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
+router.get("/:assetId", AssetService.getAsset);
+
+router.post("/", AssetService.createAsset);
+
+router.patch("/:assetId", AssetService.updateAsset);
+
+router.delete("/:assetId", AssetService.deleteAsset);
 
 module.exports = router;
