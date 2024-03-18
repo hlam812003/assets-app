@@ -21,7 +21,7 @@ const router = express.Router();
 
 router.get("/:userId", UserService.getUser);
 
-router.post("/signup", UserService.signUp);
+// router.post("/signup", UserService.signUp);
 
 router.post("/signin", UserService.signIn);
 

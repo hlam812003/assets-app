@@ -22,52 +22,52 @@ const getUser = async (req, res, next) => {
 	}
 };
 
-const signUp = async (req, res, next) => {
-	const { firstName, lastName, department, username, password } =
-		req.body || null;
+// const signUp = async (req, res, next) => {
+// 	const { firstName, lastName, department, username, password } =
+// 		req.body || null;
 
-	try {
-		if (!username || !password || !department) {
-			throw createHttpError(400, "Missing fields!");
-		}
+// 	try {
+// 		if (!username || !password || !department) {
+// 			throw createHttpError(400, "Missing fields!");
+// 		}
 
-		const [existingUsername] = await pool.query(
-			`SELECT * FROM authentication WHERE username = '${username}'`
-		);
+// 		const [existingUsername] = await pool.query(
+// 			`SELECT * FROM authentication WHERE username = '${username}'`
+// 		);
 
-		if (!isEmpty(existingUsername)) {
-			throw createHttpError(
-				409,
-				"Username already existed! Please choose a different one or sign in instead."
-			);
-		}
+// 		if (!isEmpty(existingUsername)) {
+// 			throw createHttpError(
+// 				409,
+// 				"Username already existed! Please choose a different one or sign in instead."
+// 			);
+// 		}
 
-		const [result] = await pool.query(
-			`INSERT INTO user (first_name, last_name, department_id, role)
-            VALUES (?, ?, ?, 'Teacher');
-            `,
-			[firstName, lastName, department]
-		);
-		const newUserId = result.insertId;
-		const [newUser] = await pool.query(`SELECT * FROM user WHERE user_id = ?`, [
-			newUserId,
-		]);
+// 		const [result] = await pool.query(
+// 			`INSERT INTO user (first_name, last_name, department_id, role)
+//             VALUES (?, ?, ?, 'Teacher');
+//             `,
+// 			[firstName, lastName, department]
+// 		);
+// 		const newUserId = result.insertId;
+// 		const [newUser] = await pool.query(`SELECT * FROM user WHERE user_id = ?`, [
+// 			newUserId,
+// 		]);
 
-		// TODO: Need to hash password
-		// const passwordHashed = await bcrypt.hash(password, 10);
-		const passwordHashed = password;
+// 		// TODO: Need to hash password
+// 		// const passwordHashed = await bcrypt.hash(password, 10);
+// 		const passwordHashed = password;
 
-		const [authentication] = await pool.query(
-			`INSERT INTO authentication (user_id, username, password) 
-            VALUES (?, ?, ?)`,
-			[newUserId, username, passwordHashed]
-		);
+// 		const [authentication] = await pool.query(
+// 			`INSERT INTO authentication (user_id, username, password) 
+//             VALUES (?, ?, ?)`,
+// 			[newUserId, username, passwordHashed]
+// 		);
 
-		res.status(201).json(newUser);
-	} catch (error) {
-		next(error);
-	}
-};
+// 		res.status(201).json(newUser);
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
 
 const signIn = async (req, res, next) => {
 	const username = req.body.username;
@@ -150,7 +150,7 @@ const signOut = async (req, res, next) => {
 
 module.exports = {
 	getUser,
-	signUp,
+	// signUp,
 	signIn,
 	signOut,
 };
