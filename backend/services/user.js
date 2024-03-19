@@ -121,6 +121,8 @@ const signIn = async (req, res, next) => {
 		req.session.role = user[0].role;
 		req.session.departmentId = user[0].department_id;
 
+		console.log('Session after signIn', req.session);
+
 		res.status(201).json(user);
 	} catch (error) {
 		next(error);

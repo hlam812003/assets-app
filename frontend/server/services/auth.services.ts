@@ -7,11 +7,17 @@ interface LoginData {
 
 const login = async (data: LoginData): Promise<any> => {
     try {
-        const res = await axios.post('http://localhost:3001/user/signin', data);
-        console.log(res);
-        return res.data;
+        const res = await axios.post('http://localhost:3001/user/signin', data, {
+            withCredentials: true
+        });
+        return res.data[0];
     } catch (err) {
-        console.error(err);
+        if (axios.isAxiosError(err)) {
+            return err.response?.data || { status: 'ERROR', message: 'Network or server error!' };
+        } else {
+            console.error(err);
+            return { status: 'ERROR', message: 'An unexpected error occurred!' };
+        }
     }
 };
 

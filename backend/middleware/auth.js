@@ -1,6 +1,8 @@
 const createHttpError = require("http-errors");
 
 const requiresAuth = (req, res, next) => {
+	console.log('Session in requiresAuth', req.session);
+	
 	if (req.session.userId) {
 		next();
 	} else {

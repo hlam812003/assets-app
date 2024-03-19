@@ -59,13 +59,9 @@ async function onFormSubmit(): Promise<void> {
     };
 
     try {
-        const res = await auth.login({ username: userName.value, password: passWord.value });
-        console.log(res);
-        
-        if (res && res.status === 'SUCCESS') {
-            userStore.setUser({ username: userName.value, password: passWord.value });
-            userStore.isLoggedIn = true;
-
+        await userStore.loginUser(userName.value, passWord.value);
+    
+        if (userStore.isLoggedIn) {
             setTimeout(() => {
                 isLoading.value = false;
 
@@ -84,7 +80,7 @@ async function onFormSubmit(): Promise<void> {
                 title: 'Login failed!',
                 icon: 'i-heroicons-no-symbol-solid',
                 color: 'red',
-                description: res?.message || "Incorrect username or password, please try again!",
+                description: "Incorrect username or password, please try again!",
                 timeout: 3000
             });
 
@@ -99,6 +95,7 @@ async function onFormSubmit(): Promise<void> {
             description: errorMessage,
             timeout: 3000
         });
+        isLoading.value = false;
     }
 };
 

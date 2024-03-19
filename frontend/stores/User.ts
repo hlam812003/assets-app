@@ -1,3 +1,5 @@
+import auth from '../server/services/auth.services';
+
 export interface UserInfo {
     username?: string;
     password?: string;
@@ -12,6 +14,15 @@ export const useUserStore = defineStore('user', {
       isLoggedIn: false
     }),
     actions: {
+      async loginUser(username: string, password: string) {
+        try {
+          const userData = await auth.login({ username, password });
+          this.setUser(userData);
+        } catch (error) {
+          console.error('Login failed:', error);
+          throw error;
+        }
+      },
       setUser(userInfo: UserInfo) {
         this.userInfo = userInfo;
         this.isLoggedIn = true;
@@ -19,6 +30,6 @@ export const useUserStore = defineStore('user', {
       clearUser() {
         this.userInfo = null;
         this.isLoggedIn = false;
-      }
+      },
     }
 });
