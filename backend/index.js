@@ -1,65 +1,61 @@
-require('dotenv').config();
-const db = require('./services/db');
+require("dotenv").config();
+
 const express = require("express");
-const cors = require('cors');
-const app = express();
-const bodyParser = require('body-parser');
+const cors = require("cors");
+const morgan = require("morgan");
+
+const isHttpError = require("http-errors");
+const createHttpError = require("http-errors");
 const userRouter = require("./routes/user");
-const authenticationRouter = require("./routes/authentication");
-const seachRouter = require("./routes/search");
-const assetRouter = require('./routes/asset');
+const assetRouter = require("./routes/asset");
 const assetFilter =require('./routes/departmentFilter');
 const typeFilter = require('./routes/typeFilter');
+const assetRouter = require("./routes/asset");
 
-let PORT = 3001;
+const PORT = 3001;
 
-  
-  // GET method to retrieve asset info based on department_id
+const app = express();
 
+app.use(morgan("dev")); 
 
 app.use(express.json());
 
-app.use(cors({
-    origin: 'http://localhost:3000'
-}));
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+	})
+);
 
 app.use(
-    express.urlencoded({
-        extended: true,
-    })
+	express.urlencoded({
+		extended: true,
+	})
 );
-/*app.get("/fetchById/:id",(req, res)=>{
-    const fetchId = req.params.id;
-    db.query('select *from asset where department_id=?',fetchId,(err,result)=>{
-        if (err){console.log(err)}
-        else{
-            res.send(result)
-        }
-    })
-})*/
-
-// Use the route/asset
-app.use('/types', typeFilter);
-app.use('/departments', assetFilter);
-app.use('/assets', assetRouter);
 
 app.get("/", (req, res) => {
-    res.json({ message: "ok" });
+	res.json({ message: "ok" });
 });
 
 app.use("/user", userRouter);
+app.use("/asset", assetRouter);
+app.use('/types', typeFilter);
+app.use('/departments', assetFilter);
 
-app.use("/signin", authenticationRouter);
-/* Error handler middleware */
-app.use("/search", seachRouter)
+app.use((req, res, next) => {
+	next(createHttpError(404, "Endpoint not found!"));
+});
 
-app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    console.error(err.message, err.stack);
-    res.status(statusCode).json({ message: err.message });
-    return;
+app.use((error, req, res, next) => {
+	console.error(error);
+	let errorMessage = "An unknown error occurred!";
+	let statusCode = 500;
+	if (isHttpError(error)) {
+		statusCode = error.status;
+		errorMessage = error.message;
+	}
+	res.status(statusCode).json({ error: errorMessage });
 });
 
 app.listen(PORT, () => {
-    console.log(`Example app listening at localhost:${PORT}`);
+	console.log("Server running on port: " + PORT);
 });

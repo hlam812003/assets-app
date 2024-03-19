@@ -1,7 +1,7 @@
 <template>
     <section class="main__home">
         <Navbar />
-        <main>
+        <main class="animate__animated animate__fadeIn">
             <slot />
         </main>
         <img src="/ele1.png">

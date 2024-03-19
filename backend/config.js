@@ -1,11 +1,11 @@
 const config = {
-  db: {
-    host: "localhost",
-    user: "root",
-    password: "0345762405",
-    database: "assets-app",
-    connectTimeout: 60000
-  },
-  listPerPage: 10,
+	db: {
+		host: "localhost",
+		user: "root",
+		password: "admin",
+		database: "HighSchoolAssetManagement",
+		dateStrings: true
+	},
 };
+
 module.exports = config;

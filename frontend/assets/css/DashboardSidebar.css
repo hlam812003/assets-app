@@ -5,6 +5,7 @@
 
 .main__sidebar .sidebar__item {
     @apply w-[208px] h-[35px] flex items-center gap-[10px] pl-[13px] bg-[#DCE3FF] rounded-[10px] cursor-pointer hover:bg-[#F6F0DB] transition-all;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
 .main__sidebar .sidebar__item img {
@@ -13,4 +14,9 @@
 
 .main__sidebar .sidebar__item p {
     @apply font-sans text-[15px] font-medium text-[#081031] capitalize mt-[1px];
+}
+
+.main__sidebar .sidebar__item.active {
+    @apply bg-[#F6F0DB];
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }

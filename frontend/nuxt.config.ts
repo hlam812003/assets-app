@@ -2,7 +2,11 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   pages: true,
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', 'animate.css'],
+  components: {
+    global: true,
+    dirs: ['~/components']
+  },
   postcss: {
     plugins: {
       'postcss-import': {},
