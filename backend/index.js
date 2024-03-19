@@ -3,17 +3,21 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const session = require("express-session");
 
 const isHttpError = require("http-errors");
 const createHttpError = require("http-errors");
 const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
 
-const PORT = 3001;
+const env = require("./utils/validateEnv");
+const requiresAuth = require("./middleware/auth");
+
+const PORT = env.PORT;
 
 const app = express();
 
-app.use(morgan("dev")); 
+app.use(morgan("dev"));
 
 app.use(express.json());
 
@@ -29,12 +33,27 @@ app.use(
 	})
 );
 
-app.get("/", (req, res) => {
-	res.json({ message: "ok" });
-});
+app.use(
+	session({
+		secret: env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+			httpOnly: true,
+			secure: false,
+			sameSite: "lax",
+		},
+		rolling: true,
+	})
+);
+
+// app.get("/", (req, res) => {
+// 	res.json({ message: "ok" });
+// });
 
 app.use("/user", userRouter);
-app.use("/asset", assetRouter);
+app.use("/asset", requiresAuth, assetRouter);
 
 app.use((req, res, next) => {
 	next(createHttpError(404, "Endpoint not found!"));

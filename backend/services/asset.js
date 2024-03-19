@@ -1,16 +1,28 @@
 const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
-const { num } = require("envalid");
-// const assertIsDefined = require("../utils/assertIsDefined");
+const assertIsDefined = require("../utils/assertIsDefined");
 
+const ROLE = {
+	ADMIN: "Admin",
+	MANAGER: "Manager",
+};
+
+/**
+ * GET query parameters:
+ * @param search Search keyword. (Optional)
+ * @param page Page number to retrieve. (Optional)
+ */
 const getAssets = async (req, res, next) => {
-	// const authenticatedUserId = req.session.userId;
-	const searchQuery = req.query.search_query;
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const page = req.query.page;
+	const search = req.query.search;
 
 	try {
-		// assertIsDefined(authenticatedUserId);
+		assertIsDefined(authenticatedUserId);
 
 		if (page) {
 			if (typeof parseInt(page) != "number" || parseInt(page) < 1) {
@@ -20,38 +32,37 @@ const getAssets = async (req, res, next) => {
 			const ITEMS_PER_PAGE = 5;
 			const OFFSET = (page - 1) * ITEMS_PER_PAGE;
 
-			let [assets] = [];
-			let [total] = [];
-
-			if (searchQuery) {
-				[total] = await pool.query(
-					`SELECT COUNT(asset_id) FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
-				);
-				const numberOfPages = Math.ceil(
-					total[0]["COUNT(asset_id)"] / ITEMS_PER_PAGE
-				);
-
-				if (parseInt(page) > numberOfPages) {
-					throw createHttpError(400, "Invalid page!");
-				} else {
-					[assets] = await pool.query(
-						`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}%' LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
-					);
-				}
-			} else {
-				[total] = await pool.query(`SELECT COUNT(asset_id) FROM asset`);
-				const numberOfPages = Math.ceil(
-					total[0]["COUNT(asset_id)"] / ITEMS_PER_PAGE
-				);
-
-				if (parseInt(page) > numberOfPages) {
-					throw createHttpError(400, "Invalid page!");
-				} else {
-					[assets] = await pool.query(
-						`SELECT * FROM asset LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
-					);
-				}
+			let whereConditions = [];
+			if (search) {
+				whereConditions.push(`asset_name LIKE '%${search}%'`);
 			}
+			if (authenticatedUserRole != ROLE.ADMIN) {
+				whereConditions.push(
+					`department_id = ${authenticatedUserDepartmentId}`
+				);
+			}
+
+			const WHERE_CLAUSE =
+				whereConditions.length > 0
+					? `WHERE ${whereConditions.join(" AND ")}\n`
+					: "";
+
+			const [count] = await pool.query(
+				`SELECT COUNT(asset_id) FROM asset\n` + WHERE_CLAUSE
+			);
+
+			const TOTAL = count[0]["COUNT(asset_id)"];
+			const NUMBER_OF_PAGES = Math.ceil(TOTAL / ITEMS_PER_PAGE);
+
+			if (parseInt(page) > NUMBER_OF_PAGES) {
+				throw createHttpError(400, "Invalid page!");
+			}
+
+			const [assets] = await pool.query(
+				`SELECT * FROM asset\n` +
+					WHERE_CLAUSE +
+					`LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
+			);
 
 			const START = OFFSET + 1;
 			const END = OFFSET + Object.keys(assets).length;
@@ -60,10 +71,10 @@ const getAssets = async (req, res, next) => {
 				assets: assets,
 				start: START,
 				end: END,
-				total: total[0]["COUNT(asset_id)"],
+				total: TOTAL,
 			});
 		} else {
-			const [assets] = await pool.query(`SELECT * FROM asset`);
+			const [assets] = await pool.query(`SELECT * FROM asset\n`);
 			res.status(200).json({
 				assets: assets,
 			});
@@ -74,9 +85,15 @@ const getAssets = async (req, res, next) => {
 };
 
 const getAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const assetId = req.params.assetId;
 
 	try {
+		assertIsDefined(authenticatedUserId);
+
 		if (typeof parseInt(assetId) != "number") {
 			throw createHttpError(400, "Invalid asset ID!");
 		}
@@ -89,6 +106,13 @@ const getAsset = async (req, res, next) => {
 			throw createHttpError(404, "Asset not found!");
 		}
 
+		if (
+			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserDepartmentId != asset[0].department_id
+		) {
+			throw createHttpError(401, "You are not allowed to access this asset!");
+		}
+
 		res.status(200).json(asset);
 	} catch (error) {
 		next(error);
@@ -96,26 +120,48 @@ const getAsset = async (req, res, next) => {
 };
 
 const createAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const {
-		name,
-		type,
-		status,
-		price,
+		assetName,
+		assetType,
+		assetImage,
 		description,
-		image,
-		department,
 		purchasedDate,
+		price,
+		departmentId,
+		status,
 	} = req.body || null;
 
 	try {
-		if (!name) {
+		assertIsDefined(authenticatedUserId);
+
+		if (!assetName) {
 			throw createHttpError(400, "Asset must have a name!");
 		}
 
+		if (
+			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserDepartmentId != asset[0].department_id
+		) {
+			departmentId = authenticatedUserDepartmentId;
+		}
+
 		const [result] = await pool.query(
-			`INSERT INTO asset (asset_name, asset_type, condition_state, price, description, asset_img, department_id, purchased_date) 
+			`INSERT INTO asset (asset_name, asset_type, asset_img, description, purchased_date, price, department_id, status) 
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-			[name, type, status, price, description, image, department, purchasedDate]
+			[
+				assetName,
+				assetType,
+				assetImage,
+				description,
+				purchasedDate,
+				price,
+				departmentId,
+				status,
+			]
 		);
 
 		const newAssetId = result.insertId;
@@ -131,24 +177,30 @@ const createAsset = async (req, res, next) => {
 };
 
 const updateAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const assetId = req.params.assetId;
 	const {
-		name,
-		type,
-		status,
-		price,
+		assetName,
+		assetType,
+		assetImage,
 		description,
-		image,
-		department,
 		purchasedDate,
+		price,
+		departmentId,
+		status,
 	} = req.body;
 
 	try {
+		assertIsDefined(authenticatedUserId);
+
 		if (typeof parseInt(assetId) != "number") {
 			throw createHttpError(400, "Invalid asset ID!");
 		}
 
-		if (!name) {
+		if (!assetName) {
 			throw createHttpError(400, "Asset must have a name!");
 		}
 
@@ -160,27 +212,35 @@ const updateAsset = async (req, res, next) => {
 			throw createHttpError(404, "Asset not found!");
 		}
 
+		if (authenticatedUserRole != ROLE.ADMIN) {
+			if (authenticatedUserDepartmentId != asset[0].department_id) {
+				throw createHttpError(401, "You are not allowed to access this asset!");
+			} else {
+				departmentId = authenticatedUserDepartmentId;
+			}
+		}
+
 		const [result] = await pool.query(
 			`UPDATE asset 
 			SET 
 			asset_name = ?, 
 			asset_type = ?, 
-			condition_state = ?, 
-			price = ?, 
-			description = ?, 
 			asset_img = ?, 
+			description = ?, 
+			purchased_date = ?,
+			price = ?, 
 			department_id = ?, 
-			purchased_date = ?
+			status = ?
 			WHERE asset_id = ?`,
 			[
-				name,
-				type,
-				status,
-				price,
+				assetName,
+				assetType,
+				assetImage,
 				description,
-				image,
-				department,
 				purchasedDate,
+				price,
+				departmentId,
+				status,
 				assetId,
 			]
 		);
@@ -197,9 +257,15 @@ const updateAsset = async (req, res, next) => {
 };
 
 const deleteAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const assetId = req.params.assetId;
 
 	try {
+		assertIsDefined(authenticatedUserId);
+
 		if (typeof parseInt(assetId) != "number") {
 			throw createHttpError(400, "Invalid asset ID!");
 		}
@@ -210,6 +276,13 @@ const deleteAsset = async (req, res, next) => {
 
 		if (isEmpty(asset)) {
 			throw createHttpError(404, "Asset not found!");
+		}
+
+		if (
+			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserDepartmentId != asset[0].department_id
+		) {
+			throw createHttpError(401, "You are not allowed to access this asset!");
 		}
 
 		const [result] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [
