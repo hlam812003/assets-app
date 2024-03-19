@@ -1,0 +1,20 @@
+.main__login {
+    @apply w-full min-h-[100vh] bg-[url('/loginPage.png')] bg-center bg-no-repeat relative overflow-hidden;     
+    background-size: 100% 100%;
+}
+
+.main__login .login__wrapper {
+    @apply mt-[9.85rem] ml-[11.15rem];
+}
+
+.main__login .contact__wrapper {
+    @apply flex items-center gap-[16px] absolute bottom-1 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+.main__login .contact__wrapper .contact__text {
+    @apply font-sans text-[16px] text-[#1B2D75] font-light
+}
+
+.main__login .contact__wrapper img {
+    @apply h-[24.219px];
+}
