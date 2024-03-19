@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import DashboardNavbar from '~/components/DashboardNavbar.vue';
+import DashboardNavbar from '~/components/Dashboard/DashboardNavbar.vue';
 
 import { useUserStore } from '~/stores/User';
 
@@ -20,5 +20,5 @@ const userInfo: ComputedRef<UserInfo | null> = computed(() => userStore.userInfo
 </script>
 
 <style scoped>
-@import url("~/assets/css/DashboardPage.css");
+@import url("~/assets/css/Dashboard/DashboardPage.css");
 </style>

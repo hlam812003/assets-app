@@ -4,7 +4,7 @@ export interface UserInfo {
     firstName?: string;
     lastName?: string;
     role?: string;
-}
+};
 
 export const useUserStore = defineStore('user', {
     state: () => ({

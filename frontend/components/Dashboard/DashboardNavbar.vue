@@ -21,5 +21,5 @@ defineProps({
 </script>
 
 <style scoped>
-@import url("~/assets/css/DashboardNavbar.css");
+@import url("~/assets/css/Dashboard/DashboardNavbar.css");
 </style>
