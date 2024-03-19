@@ -10,7 +10,7 @@ const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
 const assetFilter =require('./routes/departmentFilter');
 const typeFilter = require('./routes/typeFilter');
-const assetRouter = require("./routes/asset");
+// const assetRouter = require("./routes/asset");
 
 const PORT = 3001;
 
