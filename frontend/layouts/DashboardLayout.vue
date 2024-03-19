@@ -1,20 +1,15 @@
 <template>
-    <section class="main__dashboard">
+    <section class="main__dashboard animate__animated animate__fadeIn">
         <!-- v-if="userInfo" :userInfo="userInfo.username ?? 'Unknown User'" -->
         <DashboardNavbar />
         <div class="main__dashboard--body">
-            <DashboardSidebar />
-            <DashboardContent>
-
-            </DashboardContent>
+            <slot />
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import DashboardSidebar from '~/components/DashboardSidebar.vue';
 import DashboardNavbar from '~/components/DashboardNavbar.vue';
-import DashboardContent from '~/components/DashboardContent.vue';
 
 import { useUserStore } from '~/stores/User';
 

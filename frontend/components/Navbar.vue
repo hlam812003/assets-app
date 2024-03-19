@@ -1,5 +1,5 @@
 <template>
-    <div id="Navbar" class="main__nav">
+    <div id="Navbar" class="main__nav animate__animated animate__fadeInDown">
         <img src="/logo.png">
         <div class="nav__buttons--wrapper">
             <div>

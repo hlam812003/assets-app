@@ -1,10 +1,15 @@
 <template>
     <NuxtLayout name="dashboard-layout">
-        
+        <DashboardSidebar :activePage="activePageName" @update-page="setActivePage" />
+        <DashboardContent>
+            <component :is="activePage" />
+        </DashboardContent>
     </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import DashboardSidebar from '~/components/DashboardSidebar.vue';
+import DashboardContent from '~/components/DashboardContent.vue';
 // import { useUserStore } from '~/stores/User';
 
 definePageMeta({
@@ -15,4 +20,14 @@ definePageMeta({
 useHead({
     title: 'Trang Quản Trị',
 });
+
+const activePageName = ref('DashboardHome');
+
+const activePage = computed(() => {
+  return resolveComponent(activePageName.value);
+});
+
+const setActivePage = (newPage: string) => {
+  activePageName.value = newPage;
+};
 </script>

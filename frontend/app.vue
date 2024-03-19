@@ -26,3 +26,7 @@ useHead({
   // },
 });
 </script>
+
+<style>
+@import url("animate.css");
+</style>
