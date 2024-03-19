@@ -61,7 +61,7 @@ const createAsset = async (req, res, next) => {
 		}
 
 		const [result] = await pool.query(
-			`INSERT INTO asset (asset_name, asset_type, condition_state, price, description, asset_img, department_id, purchased_date)
+			`INSERT INTO asset (asset_name, asset_type, condition_state, price, description, asset_img, department_id, purchased_date) 
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
 			[name, type, status, price, description, image, department, purchasedDate]
 		);
@@ -111,7 +111,7 @@ const updateAsset = async (req, res, next) => {
 		const [result] = await pool.query(
 			`UPDATE asset 
 			SET 
-			asset_name = ?,  
+			asset_name = ?, 
 			asset_type = ?, 
 			condition_state = ?, 
 			price = ?, 
