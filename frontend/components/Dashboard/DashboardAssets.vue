@@ -1,6 +1,6 @@
 <template>
     <!-- animate__animated animate__fadeInUp animate__fast -->
-    <div id="DashboardAssets" class="dashboard__assets ">
+    <div id="DashboardAssets" class="dashboard__assets">
         <div class="assets__header">asset management</div>
         <div class="assets__options--wrapper">
             <div class="assets__options--left">
@@ -11,7 +11,7 @@
         </div>
         <div class="w-full flex items-center justify-center mt-[19px]">
             <DashboardTable />
-        </div>
+        </div>      
     </div>
 </template>
 

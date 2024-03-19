@@ -1,6 +1,6 @@
 
 .dashboard__assets {
-    @apply w-[75.5rem] h-[440px] bg-[#FCFCFA] border border-solid border-[#0000001a];
+    @apply w-[75.5rem] h-[440px] bg-[#FCFCFA] border border-solid border-[#0000001a] relative;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 

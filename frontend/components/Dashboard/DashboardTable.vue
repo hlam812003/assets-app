@@ -1,4 +1,7 @@
 <template>
+  <button class="refresh__btn" @click="handleRefresh">
+    <img src="/refreshIcon.png" class="w-[22px] h-[22px]" :class="{'animate-spin': isRefreshing}">
+  </button>
     <div v-if="pending">
       <div class="w-full h-[192px] flex items-center justify-center gap-[12px]">
         <p class="font-sans text-[16px] text-[#000] font-normal">Loading data...</p>
@@ -65,6 +68,7 @@ import { Icon } from '@iconify/vue';
 
 const currentPage = ref(1);
 const limit = ref(5);
+const isRefreshing = ref(false);
 
 interface AssetData {
   asset_id: number;
@@ -76,6 +80,7 @@ interface AssetData {
 
 const { data: fetchData, pending, error, refresh } = useFetch('/api/assets', {
   params: computed(() => ({ limit: limit.value, page: currentPage.value })),
+  lazy: true
 });
 
 const assets = computed(() => (fetchData.value as { assets: AssetData[]; totalAssets: number }).assets ?? []);
@@ -104,6 +109,13 @@ const endIndex = computed(() => {
 const isLastPage = computed(() => {
   return currentPage.value * limit.value >= totalItems.value;
 });
+
+const handleRefresh = async () => {
+  isRefreshing.value = true;
+  await refresh().finally(() => {
+    isRefreshing.value = false;
+  });
+};
 </script>
 
 <style scoped>

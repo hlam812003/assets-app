@@ -1,3 +1,7 @@
+.refresh__btn {
+    @apply absolute top-[118px] right-[123px] w-[32px] h-[32px] rounded-[30px] border border-solid border-[#000] bg-[#97e4e4cc] flex items-center justify-center cursor-pointer hover:opacity-75 transition-all;
+}
+
 .dashboard__table--wrapper {
     @apply w-[860px] h-[192px];
 }
