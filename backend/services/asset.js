@@ -1,6 +1,7 @@
 const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
+const { num } = require("envalid");
 // const assertIsDefined = require("../utils/assertIsDefined");
 
 const getAssets = async (req, res, next) => {
@@ -12,7 +13,7 @@ const getAssets = async (req, res, next) => {
 		// assertIsDefined(authenticatedUserId);
 
 		if (page) {
-			if (typeof parseInt(page) != "number") {
+			if (typeof parseInt(page) != "number" || parseInt(page) < 1) {
 				throw createHttpError(400, "Invalid page!");
 			}
 
@@ -21,28 +22,28 @@ const getAssets = async (req, res, next) => {
 
 			let [assets] = [];
 			let [total] = [];
-			let [start] = [];
-			let [end] = [];
 
 			if (searchQuery) {
 				[total] = await pool.query(
-					`SELECT COUNT(asset_id) FROM asset WHERE asset_name LIKE '%${searchQuery}%  '`
+					`SELECT COUNT(asset_id) FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
 				);
 				const numberOfPages = Math.ceil(
 					total[0]["COUNT(asset_id)"] / ITEMS_PER_PAGE
 				);
+
 				if (parseInt(page) > numberOfPages) {
 					throw createHttpError(400, "Invalid page!");
 				} else {
 					[assets] = await pool.query(
-						`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}% LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}'`
+						`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}%' LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
 					);
 				}
 			} else {
-				[total] = await pool.query(`SELECT COUNT(asset_id) FROM asset `);
+				[total] = await pool.query(`SELECT COUNT(asset_id) FROM asset`);
 				const numberOfPages = Math.ceil(
 					total[0]["COUNT(asset_id)"] / ITEMS_PER_PAGE
 				);
+
 				if (parseInt(page) > numberOfPages) {
 					throw createHttpError(400, "Invalid page!");
 				} else {
@@ -54,7 +55,7 @@ const getAssets = async (req, res, next) => {
 
 			const START = OFFSET + 1;
 			const END = OFFSET + Object.keys(assets).length;
-			
+
 			res.status(200).json({
 				assets: assets,
 				start: START,
