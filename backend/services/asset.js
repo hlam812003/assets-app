@@ -3,18 +3,20 @@ const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
 
 const getAssets = async (req, res, next) => {
-	const searchQuery = req.query.search_query;
-
+	const searchQuery = req.body.search_query;
+	
 	try {
 		let [assets] = [];
+
 		if (searchQuery) {
+			
 			[assets] = await pool.query(
 				`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
 			);
 		} else {
 			[assets] = await pool.query("SELECT * FROM asset");
 		}
-
+		console.log(assets);
 		res.status(200).json(assets);
 	} catch (error) {
 		next(error);
@@ -170,27 +172,73 @@ const deleteAsset = async (req, res, next) => {
 	}
 };
 
-async function getByDepartment(departmentID) {
+/*const getAssetsByDepartmentId = async (req, res, next) => {
+	
+	const departmentID = req.params.search_query;
+	//const departmentID = 3;
+	try {
+		let [assets] = [];
+		if (departmentID) {
+			[assets] = await pool.query(
+				`SELECT * FROM asset WHERE department_id LIKE '%${departmentID}%'`
+			);}else {
+					[assets] = await pool.query("SELECT * FROM asset");}
+	  	if (isEmpty(assets)) {
+		throw createHttpError(404, "No assets found for the given department!");
+	  	}
+		//console.log(search_query);
+		console.log(assets);
+	  	res.status(200).json(assets);
+		} catch (error) {
+	  		next(error);
+	}
+};
+*/
+const getAssetsByDepartmentId = async (req, res, next) => {
+    const departmentID = req.params.departmentID;
     try {
-        const query = 'SELECT * FROM asset WHERE department_id = ?';
-        const [rows] = await db.query(query, [departmentID]);
-        return rows;
+        const [assets] = await pool.query(
+            "SELECT * FROM asset WHERE department_id = ?", [departmentID]
+        );
+        if (!assets.length) {
+            throw createHttpError(404, "No assets found for the given department!");
+        }
+        res.status(200).json(assets);
     } catch (error) {
-        console.error('Error fetching assets by department:', error);
-        throw error;
+        next(error);
     }
-}
-async function filterAssetsByType(type) {
+};
+
+
+const getAssetsByType = async (req, res, next) => {
+    const type = req.params.type;
     try {
-        const type ="Chair";
-        const query = 'SELECT *FROM asset WHERE department_id='+mysql.escape(type);
-        const [rows] = await db.query(query,[type]);
-        return rows;
+        const [assets] = await pool.query(
+            "SELECT * FROM asset WHERE asset_type = ?", [type]
+        );
+        if (!assets.length) {
+            throw createHttpError(404, "No assets found for the given department!");
+        }
+        res.status(200).json(assets);
     } catch (error) {
-      console.error('Error filtering assets by type:', error);
-      throw error;
+        next(error);
     }
-  }
+};
+
+const getAssetsByStatus = async (req, res, next) => {
+    const assetStatus = req.params.assetStatus;
+    try {
+        const [assets] = await pool.query(
+            "SELECT * FROM asset WHERE status = ?", [assetStatus]
+        );
+        if (!assets.length) {
+            throw createHttpError(404, "No assets found for the given department!");
+        }
+        res.status(200).json(assets);
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
 	getAssets,
@@ -198,6 +246,7 @@ module.exports = {
 	createAsset,
 	updateAsset,
 	deleteAsset,
-	getByDepartment,
-    filterAssetsByType
+	getAssetsByDepartmentId,
+	getAssetsByType,
+	getAssetsByStatus
 };

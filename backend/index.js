@@ -8,9 +8,12 @@ const isHttpError = require("http-errors");
 const createHttpError = require("http-errors");
 const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
-const assetFilter =require('./routes/departmentFilter');
-const typeFilter = require('./routes/typeFilter');
-const assetRouter = require("./routes/asset");
+const departmentRouter = require("./routes/department");
+const searchRouter = require("./routes/search");
+const typeRouter = require("./routes/type");
+const statusRouter = require("./routes/status");
+
+//const assetRouter = require("./routes/asset");
 
 const PORT = 3001;
 
@@ -36,10 +39,13 @@ app.get("/", (req, res) => {
 	res.json({ message: "ok" });
 });
 
+app.use("/status",statusRouter);
+app.use("/type", typeRouter);
+app.use("/department", departmentRouter);
 app.use("/user", userRouter);
 app.use("/asset", assetRouter);
-app.use('/types', typeFilter);
-app.use('/departments', assetFilter);
+
+
 
 app.use((req, res, next) => {
 	next(createHttpError(404, "Endpoint not found!"));
