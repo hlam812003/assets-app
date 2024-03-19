@@ -34,11 +34,11 @@
 
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001;
 const userRouter = require("./routes/user");
 const authenticationRouter = require("./routes/authentication")
 const seachRouter = require("./routes/search")
-
+const adminRouter = require("./routes/admin")
 
 app.use(express.json());
 
@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
-
+app.use("/admin", adminRouter);
 app.use("/signin", authenticationRouter);
 /* Error handler middleware */
 app.use("/search", seachRouter)
