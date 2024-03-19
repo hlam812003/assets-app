@@ -70,6 +70,10 @@ const currentPage = ref(1);
 const limit = ref(5);
 const isRefreshing = ref(false);
 
+const props = defineProps({
+  searchQuery: String
+});
+
 interface AssetData {
   asset_id: number;
   asset_name: string;
@@ -79,7 +83,11 @@ interface AssetData {
 };
 
 const { data: fetchData, pending, error, refresh } = useFetch('/api/assets', {
-  params: computed(() => ({ limit: limit.value, page: currentPage.value })),
+  params: computed(() => ({ 
+    limit: limit.value, 
+    page: currentPage.value,
+    search_query: props.searchQuery 
+  })),
   lazy: true
 });
 

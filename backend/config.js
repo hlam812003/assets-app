@@ -2,7 +2,7 @@ const config = {
 	db: {
 		host: "localhost",
 		user: "root",
-		password: "admin",
+		password: "root",
 		database: "HighSchoolAssetManagement",
 		dateStrings: true
 	},
