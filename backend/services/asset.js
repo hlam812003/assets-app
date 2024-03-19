@@ -1,27 +1,72 @@
 const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
+// const assertIsDefined = require("../utils/assertIsDefined");
 
 const getAssets = async (req, res, next) => {
+	// const authenticatedUserId = req.session.userId;
 	const searchQuery = req.query.search_query;
+	const page = req.query.page;
 
 	try {
-		let [assets] = [];
-		let [count] = [];
+		// assertIsDefined(authenticatedUserId);
 
-		if (searchQuery) {
-			[assets] = await pool.query(
-				`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
-			);
-			[count] = await pool.query(
-				`SELECT COUNT(asset_id) FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
-			);
+		if (page) {
+			if (typeof parseInt(page) != "number") {
+				throw createHttpError(400, "Invalid page!");
+			}
+
+			const ITEMS_PER_PAGE = 5;
+			const OFFSET = (page - 1) * ITEMS_PER_PAGE;
+
+			let [assets] = [];
+			let [total] = [];
+			let [start] = [];
+			let [end] = [];
+
+			if (searchQuery) {
+				[total] = await pool.query(
+					`SELECT COUNT(asset_id) FROM asset WHERE asset_name LIKE '%${searchQuery}%  '`
+				);
+				const numberOfPages = Math.ceil(
+					total[0]["COUNT(asset_id)"] / ITEMS_PER_PAGE
+				);
+				if (parseInt(page) > numberOfPages) {
+					throw createHttpError(400, "Invalid page!");
+				} else {
+					[assets] = await pool.query(
+						`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}% LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}'`
+					);
+				}
+			} else {
+				[total] = await pool.query(`SELECT COUNT(asset_id) FROM asset `);
+				const numberOfPages = Math.ceil(
+					total[0]["COUNT(asset_id)"] / ITEMS_PER_PAGE
+				);
+				if (parseInt(page) > numberOfPages) {
+					throw createHttpError(400, "Invalid page!");
+				} else {
+					[assets] = await pool.query(
+						`SELECT * FROM asset LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
+					);
+				}
+			}
+
+			const START = OFFSET + 1;
+			const END = OFFSET + Object.keys(assets).length;
+			
+			res.status(200).json({
+				assets: assets,
+				start: START,
+				end: END,
+				total: total[0]["COUNT(asset_id)"],
+			});
 		} else {
-			[assets] = await pool.query("SELECT * FROM asset");
-			[count] = await pool.query(`SELECT COUNT(asset_id) FROM asset`);
+			const [assets] = await pool.query(`SELECT * FROM asset`);
+			res.status(200).json({
+				assets: assets,
+			});
 		}
-
-		res.status(200).json({ "assets": assets, "count": count });
 	} catch (error) {
 		next(error);
 	}
