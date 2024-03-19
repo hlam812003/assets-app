@@ -1,15 +1,21 @@
 require('dotenv').config();
-
+const db = require('./services/db');
 const express = require("express");
 const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const userRouter = require("./routes/user");
-const authenticationRouter = require("./routes/authentication")
-const seachRouter = require("./routes/search")
+const authenticationRouter = require("./routes/authentication");
+const seachRouter = require("./routes/search");
 const assetRouter = require('./routes/asset');
+const assetFilter =require('./routes/departmentFilter');
+const typeFilter = require('./routes/typeFilter');
 
 let PORT = 3001;
+
+  
+  // GET method to retrieve asset info based on department_id
+
 
 app.use(express.json());
 
@@ -22,7 +28,19 @@ app.use(
         extended: true,
     })
 );
+/*app.get("/fetchById/:id",(req, res)=>{
+    const fetchId = req.params.id;
+    db.query('select *from asset where department_id=?',fetchId,(err,result)=>{
+        if (err){console.log(err)}
+        else{
+            res.send(result)
+        }
+    })
+})*/
+
 // Use the route/asset
+app.use('/types', typeFilter);
+app.use('/departments', assetFilter);
 app.use('/assets', assetRouter);
 
 app.get("/", (req, res) => {

@@ -2,8 +2,8 @@ const config = {
   db: {
     host: "localhost",
     user: "root",
-    password: "root",
-    database: "HighSchoolAssetManagement",
+    password: "0345762405",
+    database: "assets-app",
     connectTimeout: 60000
   },
   listPerPage: 10,
