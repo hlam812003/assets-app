@@ -7,15 +7,21 @@ const getAssets = async (req, res, next) => {
 
 	try {
 		let [assets] = [];
+		let [count] = [];
+
 		if (searchQuery) {
 			[assets] = await pool.query(
 				`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
 			);
+			[count] = await pool.query(
+				`SELECT COUNT(asset_id) FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
+			);
 		} else {
 			[assets] = await pool.query("SELECT * FROM asset");
+			[count] = await pool.query(`SELECT COUNT(asset_id) FROM asset`);
 		}
 
-		res.status(200).json(assets);
+		res.status(200).json({ "assets": assets, "count": count });
 	} catch (error) {
 		next(error);
 	}
