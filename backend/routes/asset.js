@@ -3,7 +3,7 @@ const AssetService = require("../services/asset");
 
 const router = express.Router();
 
-router.get("/", AssetService.getAssets); // search_query
+router.get("/", AssetService.getAssets); 
 
 router.get("/:assetId", AssetService.getAsset);
 

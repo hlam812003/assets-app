@@ -2,18 +2,15 @@ const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
 const bcrypt = require("bcrypt");
-const { unsubscribe, get } = require("../routes/user");
 
-const getUser = async (req, res, next) => {
-	const userId = req.params.userId;
-
+const getAuthenticatedUser = async (req, res, next) => {
 	try {
 		const [user] = await pool.query(
-			`SELECT user.user_id, first_name, last_name, department_id, role, username 
-			FROM user 
+			`SELECT users.user_id, first_name, last_name, department_id, role, username 
+			FROM users
 			INNER JOIN authentication 
-			ON user.user_id = authentication.user_id
-			WHERE user.user_id = ${userId}`
+			ON users.user_id = authentication.user_id
+			WHERE users.user_id = ${req.session.userId}`
 		);
 
 		res.status(200).json(user);
@@ -21,6 +18,24 @@ const getUser = async (req, res, next) => {
 		next(error);
 	}
 };
+
+// const getUser = async (req, res, next) => {
+// 	const userId = req.params.userId;
+
+// 	try {
+// 		const [user] = await pool.query(
+// 			`SELECT users.user_id, first_name, last_name, department_id, role, username
+// 			FROM users
+// 			INNER JOIN authentication
+// 			ON users.user_id = authentication.user_id
+// 			WHERE users.user_id = ${userId}`
+// 		);
+
+// 		res.status(200).json(user);
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
 
 // const signUp = async (req, res, next) => {
 // 	const { firstName, lastName, department, username, password } =
@@ -49,7 +64,7 @@ const getUser = async (req, res, next) => {
 // 			[firstName, lastName, department]
 // 		);
 // 		const newUserId = result.insertId;
-// 		const [newUser] = await pool.query(`SELECT * FROM user WHERE user_id = ?`, [
+// 		const [newUser] = await pool.query(`SELECT * FROM users WHERE user_id = ?`, [
 // 			newUserId,
 // 		]);
 
@@ -58,7 +73,7 @@ const getUser = async (req, res, next) => {
 // 		const passwordHashed = password;
 
 // 		const [authentication] = await pool.query(
-// 			`INSERT INTO authentication (user_id, username, password) 
+// 			`INSERT INTO authentication (user_id, username, password)
 //             VALUES (?, ?, ?)`,
 // 			[newUserId, username, passwordHashed]
 // 		);
@@ -98,11 +113,13 @@ const signIn = async (req, res, next) => {
 			throw createHttpError(401, "Incorrect username or password!");
 		}
 
-		// req.session.userId = authentication.userId;
-
-		const [user] = await pool.query(`SELECT * FROM user WHERE user_id = ?`, [
+		const [user] = await pool.query(`SELECT * FROM users WHERE user_id = ?`, [
 			authentication[0].user_id,
 		]);
+
+		req.session.userId = user[0].user_id;
+		req.session.role = user[0].role;
+		req.session.departmentId = user[0].department_id;
 
 		res.status(201).json(user);
 	} catch (error) {
@@ -111,45 +128,18 @@ const signIn = async (req, res, next) => {
 };
 
 const signOut = async (req, res, next) => {
-	// req.session.destroy((error) => {
-	// 	if (error) {
-	// 		next(error);
-	// 	} else {
-	// 		res.status(200).json({ message: "User signed out successfully!" });
-	// 	}
-	// });
-
-	// TODO: Need a better practices
-	try {
-		res.status(200).json({ message: "User signed out successfully!" });
-	} catch (error) {
-		next(error);
-	}
+	req.session.destroy((error) => {
+		if (error) {
+			next(error);
+		} else {
+			res.status(200).json({ message: "User signed out successfully!" });
+		}
+	});
 };
 
-// async function loginUser(username, password) {
-// 	try {
-// 		const [rows] = await db.query(
-// 			"SELECT * FROM authentication WHERE username = ? AND password = ?",
-// 			[username, password]
-// 		);
-
-// 		// Close the connection
-// 		//await connection.end();
-// 		if (Object.keys(rows).length === 3) {
-// 			console.log(rows);
-// 			return rows; // Return user data if found
-// 		} else {
-// 			return null; // Return null if user not found or password incorrect
-// 		}
-// 	} catch (error) {
-// 		console.error("Error logging in user:", error);
-// 		throw error;
-// 	}
-// }
-
 module.exports = {
-	getUser,
+	getAuthenticatedUser,
+	// getUser,
 	// signUp,
 	signIn,
 	signOut,
