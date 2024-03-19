@@ -1,20 +1,14 @@
-// import mysql from 'mysql2'
-
 const mysql = require("mysql2");
-const config = require("../config");
+const env = require("../utils/validateEnv");
 
-// async function query(sql, params) {
-// 	const connection = await mysql.createConnection(config.db);
-// 	const [results] = await connection.execute(sql, params);
-
-// 	return results;
-// }
-
-const pool = mysql.createPool(config.db).promise();
+const pool = mysql
+	.createPool({
+		host: env.MYSQL_HOST,
+		user: env.MYSQL_USER,
+		password: env.MYSQL_PASSWORD,
+		database: env.MYSQL_DATABASE,
+		dateStrings: true,
+	})
+	.promise();
 
 module.exports = pool;
-
-// async function start() {
-// 	const [rows] = await pool.query("SELECT * FROM asset");
-// 	console.log(rows);
-// }
