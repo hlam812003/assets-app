@@ -83,7 +83,7 @@ const getAssets = async (req, res, next) => {
 			limitClause = `LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}\n`;
 
 			start = OFFSET + 1;
-			end = OFFSET + (page == NUMBER_OF_PAGES ? TOTAL % ITEMS_PER_PAGE : ITEMS_PER_PAGE);
+			end = page == NUMBER_OF_PAGES ? TOTAL : ITEMS_PER_PAGE * page;
 		}
 
 		const [assets] = await pool.query(`SELECT * FROM asset\n` + WHERE_CLAUSE + limitClause);
