@@ -12,8 +12,14 @@ const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
 const adminRouter = require("./routes/admin");
 
+const departmentRouter = require("./routes/department");
+const searchRouter = require("./routes/search");
+const typeRouter = require("./routes/type");
+const statusRouter = require("./routes/status");
+
 const env = require("./utils/validateEnv");
 const { requiresAuth, adminAuth } = require("./middleware/auth");
+
 
 const PORT = env.PORT;
 
@@ -58,9 +64,14 @@ app.use(
 // 	res.json({ message: "ok" });
 // });
 
+app.use("/status",statusRouter);
+app.use("/type", typeRouter);
+app.use("/department", departmentRouter);
 app.use("/user", userRouter);
+
 app.use("/asset", requiresAuth, assetRouter);
 app.use("/admin", requiresAuth, adminAuth, adminRouter);
+
 
 app.use((req, res, next) => {
 	next(createHttpError(404, "Endpoint not found!"));
