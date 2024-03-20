@@ -14,14 +14,17 @@ export const useUserStore = defineStore('user', {
       isLoggedIn: false
     }),
     actions: {
-      async loginUser(username: string, password: string) {
-        try {
-          const userData = await auth.login({ username, password });
-          this.setUser(userData);
-        } catch (error) {
-          console.error('Login failed:', error);
-          throw error;
-        }
+      loginUser(username: string, password: string) {
+        return auth.login({ username, password })
+          .then((userData) => {
+            this.setUser(userData);
+            this.isLoggedIn = true;
+            return true;
+          })
+          .catch((error) => {
+            console.error('Login failed:', error);
+            return false;
+          });
       },
       setUser(userInfo: UserInfo) {
         this.userInfo = userInfo;
