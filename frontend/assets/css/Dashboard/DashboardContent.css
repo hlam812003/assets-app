@@ -1,0 +1,3 @@
+.main__dashboard--content {
+    @apply w-full h-full bg-[#DCE3FF] flex justify-center pt-[23px];
+}

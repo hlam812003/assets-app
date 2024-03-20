@@ -1,10 +1,12 @@
+import auth from '../server/services/auth.services';
+
 export interface UserInfo {
     username?: string;
     password?: string;
     firstName?: string;
     lastName?: string;
     role?: string;
-}
+};
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -12,6 +14,18 @@ export const useUserStore = defineStore('user', {
       isLoggedIn: false
     }),
     actions: {
+      loginUser(username: string, password: string) {
+        return auth.login({ username, password })
+          .then((userData) => {
+            this.setUser(userData);
+            this.isLoggedIn = true;
+            return true;
+          })
+          .catch((error) => {
+            console.error('Login failed:', error);
+            return false;
+          });
+      },
       setUser(userInfo: UserInfo) {
         this.userInfo = userInfo;
         this.isLoggedIn = true;
@@ -19,6 +33,6 @@ export const useUserStore = defineStore('user', {
       clearUser() {
         this.userInfo = null;
         this.isLoggedIn = false;
-      }
+      },
     }
 });

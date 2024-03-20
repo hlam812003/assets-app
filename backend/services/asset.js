@@ -1,42 +1,127 @@
 const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
+const assertIsDefined = require("../utils/assertIsDefined");
 
+const ROLE = {
+	ADMIN: "Admin",
+	MANAGER: "Manager",
+};
+
+/**
+ * GET query parameters:
+ * @param page Page number to retrieve. (Optional)
+ * @param search Search keyword. (Optional)
+ * @param type Type of assets. (Optional)
+ * @param department Department ID of assets. (Optional)
+ * @param status Status of assets. (Optional)
+ *
+ */
 const getAssets = async (req, res, next) => {
-	const searchQuery = req.body.search_query;
-	
-	try {
-		let [assets] = [];
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
 
-		if (searchQuery) {
-			
-			[assets] = await pool.query(
-				`SELECT * FROM asset WHERE asset_name LIKE '%${searchQuery}%'`
+	const page = req.query.page;
+	const search = req.query.search;
+	const type = req.query.type;
+	const department = req.query.department;
+	const status = req.query.status;
+
+	try {
+		assertIsDefined(authenticatedUserId);
+
+		if (page) {
+			if (typeof parseInt(page) != "number" || parseInt(page) < 1) {
+				throw createHttpError(400, "Invalid page!");
+			}
+
+			const ITEMS_PER_PAGE = 5;
+			const OFFSET = (page - 1) * ITEMS_PER_PAGE;
+
+			let whereConditions = [];
+
+			if (search) {
+				whereConditions.push(`asset_name LIKE '%${search}%'`);
+			}
+
+			if (authenticatedUserRole == ROLE.ADMIN) {
+				if (department) {
+					whereConditions.push(`department_id = ${department}`);
+				}
+			} else {
+				whereConditions.push(`department_id = ${authenticatedUserDepartmentId}`);
+			}
+
+			if (type) {
+				whereConditions.push(`asset_type = '${type}'`);
+			}
+
+			if (status) {
+				whereConditions.push(`status = '${status}'`);
+			}
+
+			const WHERE_CLAUSE =
+				whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}\n` : "";
+
+			const [count] = await pool.query(`SELECT COUNT(asset_id) FROM asset\n` + WHERE_CLAUSE);
+
+			const TOTAL = count[0]["COUNT(asset_id)"];
+			const NUMBER_OF_PAGES = Math.ceil(TOTAL / ITEMS_PER_PAGE);
+
+			if (parseInt(page) > NUMBER_OF_PAGES) {
+				throw createHttpError(400, "Invalid page!");
+			}
+
+			const [assets] = await pool.query(
+				`SELECT * FROM asset\n` + WHERE_CLAUSE + `LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
 			);
+
+			const START = OFFSET + 1;
+			const END = OFFSET + Object.keys(assets).length;
+
+			res.status(200).json({
+				assets: assets,
+				start: START,
+				end: END,
+				total: TOTAL,
+			});
 		} else {
-			[assets] = await pool.query("SELECT * FROM asset");
+			const [assets] = await pool.query(`SELECT * FROM asset\n`);
+			res.status(200).json({
+				assets: assets,
+			});
 		}
-		console.log(assets);
-		res.status(200).json(assets);
 	} catch (error) {
 		next(error);
 	}
 };
 
 const getAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const assetId = req.params.assetId;
 
 	try {
+		assertIsDefined(authenticatedUserId);
+
 		if (typeof parseInt(assetId) != "number") {
 			throw createHttpError(400, "Invalid asset ID!");
 		}
 
-		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [
-			assetId,
-		]);
+		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
 		if (isEmpty(asset)) {
 			throw createHttpError(404, "Asset not found!");
+		}
+
+		if (
+			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserDepartmentId != asset[0].department_id
+		) {
+			throw createHttpError(401, "You are not allowed to access this asset!");
 		}
 
 		res.status(200).json(asset);
@@ -46,33 +131,43 @@ const getAsset = async (req, res, next) => {
 };
 
 const createAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const {
-		name,
-		type,
-		status,
-		price,
+		assetName,
+		assetType,
+		assetImage,
 		description,
-		image,
-		department,
 		purchasedDate,
+		price,
+		departmentId,
+		status,
 	} = req.body || null;
 
 	try {
-		if (!name) {
+		assertIsDefined(authenticatedUserId);
+
+		if (!assetName) {
 			throw createHttpError(400, "Asset must have a name!");
 		}
 
+		if (
+			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserDepartmentId != asset[0].department_id
+		) {
+			departmentId = authenticatedUserDepartmentId;
+		}
+
 		const [result] = await pool.query(
-			`INSERT INTO asset (asset_name, asset_type, condition_state, price, description, asset_img, department_id, purchased_date)
+			`INSERT INTO asset (asset_name, asset_type, asset_img, description, purchased_date, price, department_id, status) 
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-			[name, type, status, price, description, image, department, purchasedDate]
+			[assetName, assetType, assetImage, description, purchasedDate, price, departmentId, status]
 		);
 
 		const newAssetId = result.insertId;
-		const [newAsset] = await pool.query(
-			`SELECT * FROM asset WHERE asset_id = ?`,
-			[newAssetId]
-		);
+		const [newAsset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [newAssetId]);
 
 		res.status(201).json(newAsset);
 	} catch (error) {
@@ -81,64 +176,60 @@ const createAsset = async (req, res, next) => {
 };
 
 const updateAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const assetId = req.params.assetId;
 	const {
-		name,
-		type,
-		status,
-		price,
+		assetName,
+		assetType,
+		assetImage,
 		description,
-		image,
-		department,
 		purchasedDate,
+		price,
+		departmentId,
+		status,
 	} = req.body;
 
 	try {
+		assertIsDefined(authenticatedUserId);
+
 		if (typeof parseInt(assetId) != "number") {
 			throw createHttpError(400, "Invalid asset ID!");
 		}
 
-		if (!name) {
-			throw createHttpError(400, "Asset must have a name!");
-		}
-
-		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [
-			assetId,
-		]);
+		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
 		if (isEmpty(asset)) {
 			throw createHttpError(404, "Asset not found!");
 		}
 
+		if (authenticatedUserRole != ROLE.ADMIN) {
+			if (authenticatedUserDepartmentId != asset[0].department_id) {
+				throw createHttpError(401, "You are not allowed to access this asset!");
+			} else {
+				departmentId = authenticatedUserDepartmentId;
+			}
+		}
+
 		const [result] = await pool.query(
 			`UPDATE asset 
+
 			SET 
-			asset_name = ?,  
-			asset_type = ?, 
-			condition_state = ?, 
-			price = ?, 
-			description = ?, 
-			asset_img = ?, 
-			department_id = ?, 
-			purchased_date = ?
-			WHERE asset_id = ?`,
-			[
-				name,
-				type,
-				status,
-				price,
-				description,
-				image,
-				department,
-				purchasedDate,
-				assetId,
-			]
+			asset_name = ${assetName ? assetName : asset[0].asset_name}, 
+			asset_type = ${assetType ? assetType : asset[0].asset_type}, 
+			asset_img = ${assetImage ? assetImage : asset[0].asset_img}, 
+			description = ${description ? description : asset[0].description}, 
+			purchased_date = ${purchasedDate ? purchasedDate : asset[0].purchased_date},
+			price = ${price ? price : asset[0].price}, 
+			department_id = ${departmentId ? departmentId : asset[0].department_id}, 
+			status = ${status ? status : asset[0].status}
+			
+			WHERE asset_id = ${assetId}`
 		);
 
-		const [updatedAsset] = await pool.query(
-			`SELECT * FROM asset WHERE asset_id = ?`,
-			[assetId]
-		);
+		const [updatedAsset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
 		res.status(200).json(updatedAsset);
 	} catch (error) {
@@ -147,24 +238,33 @@ const updateAsset = async (req, res, next) => {
 };
 
 const deleteAsset = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+	const authenticatedUserRole = req.session.role;
+	const authenticatedUserDepartmentId = req.session.departmentId;
+
 	const assetId = req.params.assetId;
 
 	try {
+		assertIsDefined(authenticatedUserId);
+
 		if (typeof parseInt(assetId) != "number") {
 			throw createHttpError(400, "Invalid asset ID!");
 		}
 
-		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [
-			assetId,
-		]);
+		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
 		if (isEmpty(asset)) {
 			throw createHttpError(404, "Asset not found!");
 		}
 
-		const [result] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [
-			assetId,
-		]);
+		if (
+			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserDepartmentId != asset[0].department_id
+		) {
+			throw createHttpError(401, "You are not allowed to access this asset!");
+		}
+
+		const [result] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [assetId]);
 
 		res.status(204).json(asset);
 	} catch (error) {
@@ -172,28 +272,6 @@ const deleteAsset = async (req, res, next) => {
 	}
 };
 
-/*const getAssetsByDepartmentId = async (req, res, next) => {
-	
-	const departmentID = req.params.search_query;
-	//const departmentID = 3;
-	try {
-		let [assets] = [];
-		if (departmentID) {
-			[assets] = await pool.query(
-				`SELECT * FROM asset WHERE department_id LIKE '%${departmentID}%'`
-			);}else {
-					[assets] = await pool.query("SELECT * FROM asset");}
-	  	if (isEmpty(assets)) {
-		throw createHttpError(404, "No assets found for the given department!");
-	  	}
-		//console.log(search_query);
-		console.log(assets);
-	  	res.status(200).json(assets);
-		} catch (error) {
-	  		next(error);
-	}
-};
-*/
 const getAssetsByDepartmentId = async (req, res, next) => {
     const departmentID = req.params.departmentID;
     try {

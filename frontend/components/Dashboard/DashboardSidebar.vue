@@ -32,5 +32,5 @@ const isActive = (pageName: string) => {
 </script>
 
 <style scoped>
-@import url("~/assets/css/DashboardSidebar.css");
+@import url("~/assets/css/Dashboard/DashboardSidebar.css");
 </style>

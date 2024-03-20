@@ -1,0 +1,11 @@
+.filter__bar {
+    @apply pl-[19px] pr-[12px] h-[32px] bg-[#d5f6ffcc] rounded-[10px] border border-solid border-[#000]  flex items-center justify-between outline-none cursor-pointer;
+}
+
+.filter__bar .filter__bar--header {
+    @apply font-sans text-[16px] font-light text-[#000];
+}
+
+.filter__bar img {
+    @apply w-[15px] h-[8px];
+}

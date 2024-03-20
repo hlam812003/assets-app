@@ -5,5 +5,5 @@
 </template>
 
 <style scoped>
-@import url("~/assets/css/DashboardContent.css");
+@import url("~/assets/css/Dashboard/DashboardContent.css");
 </style>

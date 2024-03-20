@@ -1,0 +1,100 @@
+.asset__modal--container {
+    @apply w-full h-full absolute top-1 left-0 z-10 flex justify-center items-center; 
+}
+
+.asset__modal--container .asset__modal--wrapper {
+    @apply w-[680px] h-[505px] bg-[#FCFCFA] border border-solid border-[#0000001a] relative;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--header {
+    @apply w-full h-[49.132px] pl-[32.03px] bg-[#97E4E4] border border-solid border-[#00000033] flex items-center gap-[12px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--header .close__modal {
+    @apply w-[32.033px] h-[30.824px] cursor-pointer hover:opacity-75 transition-all;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--header .asset__modal--headerText {
+    @apply font-sans text-[17px] font-normal text-[#081031] italic;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body {
+    @apply w-full pl-[42px] pt-[16px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop {
+    @apply w-full flex items-center gap-[45.23px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left {
+    @apply flex items-center flex-col gap-[8px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem {
+    @apply flex items-center justify-between w-full gap-[32px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .asset__modal--bodyTop-leftItemTitle {
+    @apply font-sans text-[16px] font-normal text-[#081031] italic;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem input {
+    @apply w-[215.224px] h-[28px] border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[12px] font-sans text-[#000] text-[16px] font-light;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn {
+    @apply w-[215.224px] h-[28px] relative border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[11px] cursor-pointer;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn span {
+    @apply font-sans text-[#000] text-[16px] font-light;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn img {
+    @apply w-[8.01px] h-[8.4px] absolute right-[6px] top-[10px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-right {
+    @apply flex items-center flex-col gap-[17.5px] mt-[20.25px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-right .asset__img {
+    @apply w-[212.874px] h-[152.191px] border border-solid border-[#00000080] object-cover bg-[#fffae675];
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-right .asset__import--btn {
+    @apply w-[80.083px] h-[21.191px] flex justify-center items-center border border-solid border-[#00000080] bg-[#E4E3E3] rounded-[5px] font-sans text-[10px] text-[#919191] italic font-normal capitalize outline-none hover:opacity-75 transition-all;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--description {
+    @apply flex items-start gap-[29px] w-[473.6px] text-wrap mt-[25.71px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--description .asset__modal--descriptionTitle,
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--description .asset__modal--descriptionContent {
+    @apply font-sans text-[17px] font-normal text-[#081031] italic;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--actions {
+    @apply w-full flex items-center justify-end gap-[16px] mt-[29px] pr-[33px];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--actions .asset__btn {
+    @apply w-[80.237px] h-[28px] rounded-[5px] outline-none border border-solid border-[#00000080] cursor-pointer hover:opacity-75 transition-all flex items-center justify-center font-sans text-[17px] capitalize font-normal text-[#081031];
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--actions .asset__btn.add,
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--actions .asset__btn.edit {
+    @apply bg-[#D5E4FA]; 
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--actions .asset__btn.delete {
+    @apply bg-[#FAE0D5];
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--footer {
+    @apply absolute bottom-0 w-full h-[23.762px] flex items-center pl-[42px] border border-solid border-[#00000033] bg-[#97e4e49e] font-sans text-[10px] italic font-normal text-[#919191];
+}

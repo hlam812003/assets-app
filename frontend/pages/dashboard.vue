@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import DashboardSidebar from '~/components/DashboardSidebar.vue';
-import DashboardContent from '~/components/DashboardContent.vue';
+import DashboardSidebar from '~/components/Dashboard/DashboardSidebar.vue';
+import DashboardContent from '~/components/Dashboard/DashboardContent.vue';
 // import { useUserStore } from '~/stores/User';
 
 definePageMeta({
@@ -21,7 +21,7 @@ useHead({
     title: 'Trang Quản Trị',
 });
 
-const activePageName = ref('DashboardHome');
+const activePageName = ref('DashboardAssets');
 
 const activePage = computed(() => {
   return resolveComponent(activePageName.value);

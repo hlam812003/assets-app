@@ -21,6 +21,8 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
+
 import LoadingButton from '~/components/LoadingButton.vue';
 
 import auth from '~/server/services/auth.services';
@@ -59,16 +61,21 @@ async function onFormSubmit(): Promise<void> {
     };
 
     try {
-        const res = await auth.login({ username: userName.value, password: passWord.value });
-        console.log(res);
+        const loginSuccess = await userStore.loginUser(userName.value, passWord.value);
         
-        if (res && res.status === 'SUCCESS') {
-            userStore.setUser({ username: userName.value, password: passWord.value });
-            userStore.isLoggedIn = true;
-
+        if (!loginSuccess) {
+            toast.add({
+                title: 'Error!',
+                icon: 'i-heroicons-no-symbol-solid',
+                color: 'red',
+                description: 'Incorrect username or password, please try again!',
+                timeout: 2500
+            });
+            isLoading.value = false;
+        } else {
             setTimeout(() => {
                 isLoading.value = false;
-
+        
                 toast.add({
                     title: 'Logged in successfully!',
                     icon: 'i-heroicons-check-circle-solid',
@@ -76,22 +83,24 @@ async function onFormSubmit(): Promise<void> {
                     description: `Welcome back, ${userName.value}.`,
                     timeout: 3000
                 });
-
+        
                 router.push('/dashboard');
             }, 2000);
-        } else {
-            toast.add({
-                title: 'Login failed!',
-                icon: 'i-heroicons-no-symbol-solid',
-                color: 'red',
-                description: res?.message || "Incorrect username or password, please try again!",
-                timeout: 3000
-            });
-
-            setTimeout(() => isLoading.value = false, 1500);
         }
+
     } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'An error occurred, please try again later!';
+        console.error(err);
+        let errorMessage = 'An unexpected error occurred. Please try again later.';
+
+        if (axios.isAxiosError(err)) {
+            if (err.response && err.response.status === 401) {
+                errorMessage = "Incorrect username or password, please try again!";
+            } else if (err.response) {
+                errorMessage = err.response.data.message || 'Network or server error!';
+                
+            }
+        };
+
         toast.add({
             title: 'Login failed!',
             icon: 'i-heroicons-no-symbol-solid',
@@ -99,6 +108,8 @@ async function onFormSubmit(): Promise<void> {
             description: errorMessage,
             timeout: 3000
         });
+
+        setTimeout(() => isLoading.value = false, 1500);
     }
 };
 

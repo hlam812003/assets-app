@@ -3,29 +3,39 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 const isHttpError = require("http-errors");
 const createHttpError = require("http-errors");
 const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
+const adminRouter = require("./routes/admin");
+
 const departmentRouter = require("./routes/department");
 const searchRouter = require("./routes/search");
 const typeRouter = require("./routes/type");
 const statusRouter = require("./routes/status");
 
-//const assetRouter = require("./routes/asset");
+const env = require("./utils/validateEnv");
+const { requiresAuth, adminAuth } = require("./middleware/auth");
 
-const PORT = 3001;
+
+const PORT = env.PORT;
 
 const app = express();
 
-app.use(morgan("dev")); 
+app.use(morgan("dev"));
 
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.use(
 	cors({
 		origin: "http://localhost:3000",
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		credentials: true,
 	})
 );
 
@@ -35,16 +45,32 @@ app.use(
 	})
 );
 
-app.get("/", (req, res) => {
-	res.json({ message: "ok" });
-});
+app.use(
+	session({
+		secret: env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+			httpOnly: true,
+			secure: false,
+			sameSite: "lax",
+		},
+		rolling: true,
+	})
+);
+
+// app.get("/", (req, res) => {
+// 	res.json({ message: "ok" });
+// });
 
 app.use("/status",statusRouter);
 app.use("/type", typeRouter);
 app.use("/department", departmentRouter);
 app.use("/user", userRouter);
-app.use("/asset", assetRouter);
 
+app.use("/asset", requiresAuth, assetRouter);
+app.use("/admin", requiresAuth, adminAuth, adminRouter);
 
 
 app.use((req, res, next) => {
