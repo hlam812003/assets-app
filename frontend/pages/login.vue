@@ -97,7 +97,6 @@ async function onFormSubmit(): Promise<void> {
                 errorMessage = "Incorrect username or password, please try again!";
             } else if (err.response) {
                 errorMessage = err.response.data.message || 'Network or server error!';
-                
             }
         };
 

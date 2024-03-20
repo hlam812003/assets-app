@@ -1,3 +1,37 @@
 .dashboard__home {
-    @apply w-[475px] h-[987px];
+    @apply w-[75.5rem] h-[440px] bg-[#FCFCFA] border border-solid border-[#0000001a] relative;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.dashboard__home .assets__header {
+    @apply w-full h-[43px] pl-[25px] flex items-center font-sans text-[17px] font-medium text-[#081031] capitalize;
+}
+
+.dashboard__home .assets__body {
+    @apply w-full px-[25px];
+}
+
+.dashboard__home .assets__body .assets__body--header {
+    @apply w-full flex items-center justify-between;
+}
+
+.dashboard__home .assets__body .assets__body--bottom {
+    @apply w-full flex items-start justify-between mt-[40px] pr-[181px];
+}
+
+.dashboard__home .assets__body .assets__body--bottom .assets__body--bottomLeft {
+    @apply flex flex-col items-start gap-[23px];
+}
+
+.dashboard__home .assets__body .assets__body--bottom .bottomLeft__header,
+.dashboard__home .assets__body .assets__body--bottom .bottomRight__header {
+    @apply text-[16px] font-sans text-[#081031] font-normal;
+}
+
+.dashboard__home .assets__body .assets__body--bottom .assets__body--bottomRight {
+    @apply flex flex-col items-center gap-[16px];
+}
+
+.dashboard__home .assets__body .assets__body--bottom .bottomLeft__chart {
+    @apply ml-[-100px]
 }

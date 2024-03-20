@@ -16,13 +16,13 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    '@nuxt/ui',
-    'nuxt-icon',
-    [
-      '@pinia/nuxt', { 
-        disableVuex: false,
-        autoImports: ['defineStore']
-      }
-  ],
+      '@nuxt/ui',
+      'nuxt-icon',
+      [
+        '@pinia/nuxt', { 
+          disableVuex: false,
+          autoImports: ['defineStore']
+        }
+    ],
   ]
 })

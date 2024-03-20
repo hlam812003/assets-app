@@ -1,13 +1,25 @@
 <template>
-    <button id="FilterBar" class="filter__bar">
+    <button id="FilterBar" :class="['filter__bar', props.color]">
         <p class="filter__bar--header">{{ content }}</p>
-        <img src="/ele2.png">
+        <img :src="`/${props.icon}.png`" :style="`height: ${props.iconSize}px`">
     </button>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
     content: {
+        type: String,
+        required: true,
+    },
+    icon: {
+        type: String,
+        required: true,
+    },
+    iconSize: {
+        type: String,
+        required: true,
+    },
+    color: {
         type: String,
         required: true,
     }

@@ -1,0 +1,55 @@
+.dashboard__total--item {
+    @apply w-[275px] h-[67px] bg-[#FFF] flex items-center border border-solid rounded-[5px];
+}
+
+.dashboard__total--item .total__item--icon {
+    @apply w-[100px] h-full rounded-[5px] border border-solid flex items-center justify-center;
+}
+
+.dashboard__total--item .total__item--icon img {
+    @apply w-[50px] h-[50px];
+}
+
+.dashboard__total--item .total__item--content {
+    @apply w-[175px] flex items-center flex-col justify-center text-center gap-[3px]; 
+}
+
+.dashboard__total--item .total__item--content .total__item--count {
+    @apply font-sans text-[22px] font-medium text-[#000];
+}
+
+.dashboard__total--item .total__item--content .total__item--label {
+    @apply font-sans text-[11px] font-light text-[#000];
+}
+
+.dashboard__total--item.asset {
+    @apply border-[#6ACAC9];
+}
+
+.dashboard__total--item.asset .total__item--icon {
+    @apply bg-[#6ACAC9];
+}
+
+.dashboard__total--item.available {
+    @apply border-[#a2ca6ecc];
+}
+
+.dashboard__total--item.available .total__item--icon {
+    @apply bg-[#a2ca6ecc];
+}
+
+.dashboard__total--item.under-maintenance {
+    @apply border-[#FF6C5E];
+}
+
+.dashboard__total--item.under-maintenance .total__item--icon {
+    @apply bg-[#FF6C5E];
+}
+
+.dashboard__total--item.total-user {
+    @apply border-[#F6D345];
+}
+
+.dashboard__total--item.total-user .total__item--icon {
+    @apply bg-[#F6D345];
+}

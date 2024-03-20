@@ -1,7 +1,7 @@
 <template>
     <div class="search__bar">
-        <input type="text" name="searchAsset" id="searchAsset" v-model="searchQuery" placeholder="Input asset name..."/>
-        <button class="search__btn" @click="handleSearchClick">
+        <input type="text" name="searchAsset" id="searchAsset" :class="[props.color]" v-model="searchQuery" :placeholder="props.placeholder" />
+        <button :class="['search__btn', props.color]" @click="handleSearchClick">
             <img src="/searchIcon.png">
         </button>
     </div>
@@ -9,6 +9,17 @@
 
 <script setup>
 import { debounce } from 'lodash';
+
+const props = defineProps({
+    color: {
+        type: String,
+        required: true
+    },
+    placeholder: {
+        type: String,
+        required: true
+    },
+});
 
 const searchQuery = ref('');
 const emit = defineEmits(['search']);

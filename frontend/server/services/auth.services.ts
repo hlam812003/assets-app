@@ -23,8 +23,8 @@ const login = (data: LoginData) => {
                 throw new Error('An unexpected error occurred during login.');
             }
       });
-  };
+};
   
-  export default {
+export default {
     login
-  };
+};

@@ -21,7 +21,7 @@ useHead({
     title: 'Trang Quản Trị',
 });
 
-const activePageName = ref('DashboardAssets');
+const activePageName = ref('DashboardUsers');
 
 const activePage = computed(() => {
   return resolveComponent(activePageName.value);

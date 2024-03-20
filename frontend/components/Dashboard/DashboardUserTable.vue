@@ -8,41 +8,48 @@
         <Icon icon="ant-design:loading-outlined" style="color: black" class="animate-spin text-[18px]"/>
       </div>
     </div>
-    <div v-else-if="!pending && !error && assets.length === 0" class="w-full h-[192px] flex items-center justify-center gap-[6px]">
+    <!-- <div v-else-if="!pending && !error && assets.length === 0" class="w-full h-[192px] flex items-center justify-center gap-[6px]">
       <Icon icon="material-symbols:error-outline" style="color: #ff0000" class="text-[18px]"/>
       <p class="font-sans text-[16px] text-[red] font-normal">An error occurred while loading data.</p>
-    </div>
+    </div> -->
     <div v-else class="dashboard__table--wrapper">
         <div class="dashboard__table--header">
-            <div class="dashboard__table--headerItem">asset id</div>
-            <div class="dashboard__table--headerItem">asset name</div>
-            <div class="dashboard__table--headerItem">type</div>
+            <div class="dashboard__table--headerItem">user id</div>
+            <div class="dashboard__table--headerItem">user name</div>
             <div class="dashboard__table--headerItem">department</div>
-            <div class="dashboard__table--headerItem">status</div>
-            <div class="dashboard__table--headerItem">view</div>
+            <div class="dashboard__table--headerItem">role</div>
+            <div class="dashboard__table--headerItem">edit</div>
         </div>
-        <div class="dashboard__assets--list">
-            <div class="dashboard__assets--item" v-for="asset in assets" :key="asset.asset_id">
-                <div class="dashboard__assets--content dashboard__assets--id">{{ asset.asset_id }}</div>
-                <div class="dashboard__assets--content dashboard__assets--name">{{ asset.asset_name }}</div>
-                <div class="dashboard__assets--content dashboard__assets--type">{{ asset.asset_type }}</div>
-                <div class="dashboard__assets--content dashboard__assets--department">{{ asset.department_id }}</div>
-                <div class="dashboard__assets--content dashboard__assets--status">{{ asset.status }}</div>
-                <div class="dashboard__assets--content dashboard__assets--view" @click="showModal(asset)">
-                    <img src="/ele3.png">
-                </div>
-            </div>
+        <div class="dashboard__users--list">
+          <!-- <div class="dashboard__users--item">
+              <div class="dashboard__users--content dashboard__users--id">1</div>
+              <div class="dashboard__users--content dashboard__users--name">123</div>
+              <div class="dashboard__users--content dashboard__users--department">123</div>
+              <div class="dashboard__users--content dashboard__users--role">23</div>
+              <div class="dashboard__users--content dashboard__users--edit">
+                  <img src="/editIcon.png">
+              </div>
+          </div> -->
+            <!-- <div class="dashboard__users--item" v-for="asset in assets" :key="asset.asset_id">
+                  <div class="dashboard__users--content dashboard__users--id">{{ asset.asset_id }}</div>
+                  <div class="dashboard__users--content dashboard__users--name">{{ asset.asset_name }}</div>
+                  <div class="dashboard__users--content dashboard__users--department">{{ asset.department_id }}</div>
+                  <div class="dashboard__users--content dashboard__users--role">{{ asset.status }}</div>
+                  <div class="dashboard__users--content dashboard__users--edit" @click="showModal(asset)">
+                      <img src="/editIcon.png">
+                  </div>
+            </div> -->
         </div>
-        <DashboardAssetModal 
+        <!-- <DashboardAssetModal 
           v-if="isModalVisible"
           :asset="selectedAsset"
           @close="closeModal"
-        />
-        <div class="dashboard__assets--footer">
-          <div class="dashboard__assets--footerContent">
-              Show up {{ startIndex }} to {{ endIndex }} of {{ totalItems }} items
+        /> -->
+        <div class="dashboard__users--footer">
+          <div class="dashboard__users--footerContent">
+              Show up {{ startIndex }} to {{ endIndex }} of {{ totalItems }} users
           </div>
-          <div class="dashboard__assets--navigation">
+          <div class="dashboard__users--navigation">
             <button
               class="navigation__btn navigation__btn--left"
               :class="{ 'opacity-50': currentPage <= 1 }"
@@ -142,5 +149,5 @@ const handleRefresh = async () => {
 </script>
 
 <style scoped>
-@import url("~/assets/css/Dashboard/DashboardTable.css");
+@import url("~/assets/css/Dashboard/DashboardUserTable.css");
 </style>

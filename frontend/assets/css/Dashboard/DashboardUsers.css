@@ -1,0 +1,16 @@
+.dashboard__users {
+    @apply w-[75.5rem] h-[440px] bg-[#FCFCFA] border border-solid border-[#0000001a] relative;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.dashboard__users .users__header {
+    @apply w-full h-[43px] pl-[25px] flex items-center bg-[#FFE992] border border-solid border-[#00000033] font-sans text-[17px] font-medium text-[#081031] capitalize;
+}
+
+.dashboard__users .users__options--wrapper {
+    @apply w-full flex items-center justify-center gap-[152px] pt-[24px];
+}
+
+.dashboard__users .users__options--wrapper .users__options--left {
+    @apply flex items-center gap-[36px];
+}

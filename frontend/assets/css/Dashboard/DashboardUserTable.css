@@ -1,0 +1,76 @@
+.refresh__btn {
+    @apply absolute top-[118px] right-[156.8px] w-[32px] h-[32px] rounded-[30px] border border-solid border-[#000] bg-[#FFE992] flex items-center justify-center cursor-pointer hover:opacity-75 transition-all;
+}
+
+.dashboard__table--wrapper {
+    @apply w-[774px] h-[192px];
+}
+
+.dashboard__table--wrapper .dashboard__table--header {
+    @apply w-full h-[32px] flex items-center;
+}
+
+.dashboard__table--wrapper .dashboard__table--header .dashboard__table--headerItem {
+    @apply h-full flex items-center justify-center border border-solid border-[#000] bg-[#FFE992] font-sans text-[16px] font-light text-[#000] capitalize;
+}
+
+.dashboard__table--headerItem:nth-of-type(1),
+.dashboard__users--content:nth-of-type(1) {
+    @apply w-[93px];
+}
+
+.dashboard__table--headerItem:nth-of-type(2),
+.dashboard__users--content:nth-of-type(2) {
+    @apply w-[267px];
+}
+
+.dashboard__table--headerItem:nth-of-type(3),
+.dashboard__users--content:nth-of-type(3) {
+    @apply w-[187px];
+}
+
+.dashboard__table--headerItem:nth-of-type(4),
+.dashboard__users--content:nth-of-type(4) {
+    @apply w-[158px];
+}
+
+.dashboard__table--headerItem:nth-of-type(5),
+.dashboard__users--content:nth-of-type(5) {
+    @apply w-[69px];
+}
+
+.dashboard__table--wrapper .dashboard__users--list {
+    @apply w-full;
+}
+
+.dashboard__table--wrapper .dashboard__users--list .dashboard__users--item {
+    @apply w-full h-[32px] flex items-center;
+}
+
+.dashboard__table--wrapper .dashboard__users--list .dashboard__users--item .dashboard__users--content {
+    @apply h-full flex items-center justify-center bg-[#FFF] border border-solid border-[#000] font-sans text-[16px] text-[#000] font-light;
+}
+
+.dashboard__users--edit img {
+    @apply w-[22px] h-[22px] cursor-pointer hover:opacity-75 transition-all;
+}
+
+.dashboard__table--wrapper  .dashboard__users--footer {
+    @apply w-[774px] pl-[48px] flex items-center justify-between mt-[13px];
+}
+
+.dashboard__table--wrapper  .dashboard__users--footer .dashboard__users--footerContent {
+    @apply font-sans text-[13px] text-[#0F263A] italic font-light;
+}
+
+.dashboard__table--wrapper .dashboard__users--footer .dashboard__users--navigation {
+    @apply flex items-center gap-[19px] mr-[-5.8px];
+}
+
+.dashboard__table--wrapper .dashboard__users--footer .dashboard__users--navigation .navigation__btn {
+    @apply outline-none border-none flex items-center justify-center font-sans italic text-[12px] font-light text-[#2196F3] cursor-pointer transition-all hover:opacity-75;
+}
+
+.dashboard__table--wrapper .dashboard__users--footer .dashboard__users--navigation .navigation__btn img {
+    @apply w-[12px] h-[12px];
+}

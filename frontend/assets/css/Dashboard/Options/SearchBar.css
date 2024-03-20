@@ -3,11 +3,24 @@
 }
 
 .search__bar input {
-    @apply w-[187px] h-[32px] rounded-[2px] border border-solid border-[#000] bg-[#d5f6ffcc] outline-none px-[11px] font-sans text-[#000] text-[16px] font-light;
+    @apply w-[187px] h-[32px] rounded-[2px] border border-solid border-[#000] outline-none px-[11px] font-sans text-[#000] text-[16px] font-light;
+}
+
+.search__bar input.assets,
+.search__bar .search__btn.assets {
+    @apply bg-[#d5f6ffcc];
+}
+
+.search__bar input.users {
+    @apply bg-[#fbffe4cc];
 }
 
 .search__bar .search__btn {
     @apply w-[32px] h-[32px] flex items-center justify-center outline-none cursor-pointer rounded-[30px] border border-solid border-[#000] bg-[#97e4e4cc] transition-all hover:opacity-75;
+}
+
+.search__bar .search__btn.users {
+    @apply bg-[#FFE992];
 }
 
 .search__bar .search__btn img {

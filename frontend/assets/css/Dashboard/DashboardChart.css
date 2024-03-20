@@ -1,0 +1,3 @@
+.dashboard__chart {
+    @apply w-[450px] h-[160px];
+}
