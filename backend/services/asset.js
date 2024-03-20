@@ -217,14 +217,14 @@ const updateAsset = async (req, res, next) => {
 			`UPDATE asset 
 
 			SET 
-			asset_name = ${assetName ? assetName : asset[0].asset_name}, 
-			asset_type = ${assetType ? assetType : asset[0].asset_type}, 
-			asset_img = ${assetImage ? assetImage : asset[0].asset_img}, 
-			description = ${description ? description : asset[0].description}, 
-			purchased_date = ${purchasedDate ? purchasedDate : asset[0].purchased_date},
+			asset_name = '${assetName ? assetName : asset[0].asset_name}', 
+			asset_type = '${assetType ? assetType : asset[0].asset_type}', 
+			asset_img = '${assetImage ? assetImage : asset[0].asset_img}', 
+			description = '${description ? description : asset[0].description}', 
+			purchased_date = '${purchasedDate ? purchasedDate : asset[0].purchased_date}', 
 			price = ${price ? price : asset[0].price}, 
 			department_id = ${departmentId ? departmentId : asset[0].department_id}, 
-			status = ${status ? status : asset[0].status}
+			status = '${status ? status : asset[0].status}'
 			
 			WHERE asset_id = ${assetId}`
 		);
@@ -273,49 +273,44 @@ const deleteAsset = async (req, res, next) => {
 };
 
 const getAssetsByDepartmentId = async (req, res, next) => {
-    const departmentID = req.params.departmentID;
-    try {
-        const [assets] = await pool.query(
-            "SELECT * FROM asset WHERE department_id = ?", [departmentID]
-        );
-        if (!assets.length) {
-            throw createHttpError(404, "No assets found for the given department!");
-        }
-        res.status(200).json(assets);
-    } catch (error) {
-        next(error);
-    }
+	const departmentID = req.params.departmentID;
+	try {
+		const [assets] = await pool.query("SELECT * FROM asset WHERE department_id = ?", [
+			departmentID,
+		]);
+		if (!assets.length) {
+			throw createHttpError(404, "No assets found for the given department!");
+		}
+		res.status(200).json(assets);
+	} catch (error) {
+		next(error);
+	}
 };
 
-
 const getAssetsByType = async (req, res, next) => {
-    const type = req.params.type;
-    try {
-        const [assets] = await pool.query(
-            "SELECT * FROM asset WHERE asset_type = ?", [type]
-        );
-        if (!assets.length) {
-            throw createHttpError(404, "No assets found for the given department!");
-        }
-        res.status(200).json(assets);
-    } catch (error) {
-        next(error);
-    }
+	const type = req.params.type;
+	try {
+		const [assets] = await pool.query("SELECT * FROM asset WHERE asset_type = ?", [type]);
+		if (!assets.length) {
+			throw createHttpError(404, "No assets found for the given department!");
+		}
+		res.status(200).json(assets);
+	} catch (error) {
+		next(error);
+	}
 };
 
 const getAssetsByStatus = async (req, res, next) => {
-    const assetStatus = req.params.assetStatus;
-    try {
-        const [assets] = await pool.query(
-            "SELECT * FROM asset WHERE status = ?", [assetStatus]
-        );
-        if (!assets.length) {
-            throw createHttpError(404, "No assets found for the given department!");
-        }
-        res.status(200).json(assets);
-    } catch (error) {
-        next(error);
-    }
+	const assetStatus = req.params.assetStatus;
+	try {
+		const [assets] = await pool.query("SELECT * FROM asset WHERE status = ?", [assetStatus]);
+		if (!assets.length) {
+			throw createHttpError(404, "No assets found for the given department!");
+		}
+		res.status(200).json(assets);
+	} catch (error) {
+		next(error);
+	}
 };
 
 module.exports = {
@@ -326,5 +321,5 @@ module.exports = {
 	deleteAsset,
 	getAssetsByDepartmentId,
 	getAssetsByType,
-	getAssetsByStatus
+	getAssetsByStatus,
 };
