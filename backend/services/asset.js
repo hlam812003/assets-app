@@ -1,6 +1,7 @@
 const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
+const isNumber = require("../utils/isNumber");
 const assertIsDefined = require("../utils/assertIsDefined");
 
 const ROLE = {
@@ -23,6 +24,7 @@ const getAssets = async (req, res, next) => {
 	const authenticatedUserDepartmentId = req.session.departmentId;
 
 	const page = req.query.page;
+	const limit = req.query.limit;
 	const search = req.query.search;
 	const type = req.query.type;
 	const department = req.query.department;
@@ -30,68 +32,68 @@ const getAssets = async (req, res, next) => {
 
 	try {
 		assertIsDefined(authenticatedUserId);
+		let whereConditions = [];
 
-		if (page) {
-			if (typeof parseInt(page) != "number" || parseInt(page) < 1) {
+		if (search) {
+			whereConditions.push(`asset_name LIKE '%${search}%'`);
+		}
+
+		if (authenticatedUserRole == ROLE.ADMIN) {
+			if (isNumber(department)) {
+				whereConditions.push(`department_id = ${department}`);
+			}
+		} else {
+			whereConditions.push(`department_id = ${authenticatedUserDepartmentId}`);
+		}
+
+		if (type) {
+			whereConditions.push(`asset_type = '${type}'`);
+		}
+
+		if (status) {
+			whereConditions.push(`status = '${status}'`);
+		}
+
+		const WHERE_CLAUSE =
+			whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}\n` : "";
+
+		const [count] = await pool.query(`SELECT COUNT(asset_id) FROM asset\n` + WHERE_CLAUSE);
+		const TOTAL = count[0]["COUNT(asset_id)"];
+		let start = 1;
+		let end = TOTAL;
+
+		let limitClause = "";
+
+		if (page && limit) {
+			if (!isNumber(page)) {
 				throw createHttpError(400, "Invalid page!");
 			}
+			if (!isNumber(limit) || limit < 1) {
+				throw createHttpError(400, "Invalid limit!");
+			}
 
-			const ITEMS_PER_PAGE = 5;
+			const ITEMS_PER_PAGE = parseInt(limit);
+			const NUMBER_OF_PAGES = Math.ceil(TOTAL / ITEMS_PER_PAGE);
 			const OFFSET = (page - 1) * ITEMS_PER_PAGE;
 
-			let whereConditions = [];
-
-			if (search) {
-				whereConditions.push(`asset_name LIKE '%${search}%'`);
+			if (page < 1 || page > NUMBER_OF_PAGES) {
+				throw createHttpError(400, "Page is out of range!");
 			}
 
-			if (authenticatedUserRole == ROLE.ADMIN) {
-				if (department) {
-					whereConditions.push(`department_id = ${department}`);
-				}
-			} else {
-				whereConditions.push(`department_id = ${authenticatedUserDepartmentId}`);
-			}
+			limitClause = `LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}\n`;
 
-			if (type) {
-				whereConditions.push(`asset_type = '${type}'`);
-			}
-
-			if (status) {
-				whereConditions.push(`status = '${status}'`);
-			}
-
-			const WHERE_CLAUSE =
-				whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}\n` : "";
-
-			const [count] = await pool.query(`SELECT COUNT(asset_id) FROM asset\n` + WHERE_CLAUSE);
-
-			const TOTAL = count[0]["COUNT(asset_id)"];
-			const NUMBER_OF_PAGES = Math.ceil(TOTAL / ITEMS_PER_PAGE);
-
-			if (parseInt(page) > NUMBER_OF_PAGES) {
-				throw createHttpError(400, "Invalid page!");
-			}
-
-			const [assets] = await pool.query(
-				`SELECT * FROM asset\n` + WHERE_CLAUSE + `LIMIT ${ITEMS_PER_PAGE} OFFSET ${OFFSET}`
-			);
-
-			const START = OFFSET + 1;
-			const END = OFFSET + Object.keys(assets).length;
-
-			res.status(200).json({
-				assets: assets,
-				start: START,
-				end: END,
-				total: TOTAL,
-			});
-		} else {
-			const [assets] = await pool.query(`SELECT * FROM asset\n`);
-			res.status(200).json({
-				assets: assets,
-			});
+			start = OFFSET + 1;
+			end = OFFSET + (page == NUMBER_OF_PAGES ? TOTAL % ITEMS_PER_PAGE : ITEMS_PER_PAGE);
 		}
+
+		const [assets] = await pool.query(`SELECT * FROM asset\n` + WHERE_CLAUSE + limitClause);
+
+		res.status(200).json({
+			assets: assets,
+			total: TOTAL,
+			start: start,
+			end: end,
+		});
 	} catch (error) {
 		next(error);
 	}
@@ -106,10 +108,6 @@ const getAsset = async (req, res, next) => {
 
 	try {
 		assertIsDefined(authenticatedUserId);
-
-		if (typeof parseInt(assetId) != "number") {
-			throw createHttpError(400, "Invalid asset ID!");
-		}
 
 		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
@@ -195,10 +193,6 @@ const updateAsset = async (req, res, next) => {
 	try {
 		assertIsDefined(authenticatedUserId);
 
-		if (typeof parseInt(assetId) != "number") {
-			throw createHttpError(400, "Invalid asset ID!");
-		}
-
 		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
 		if (isEmpty(asset)) {
@@ -246,10 +240,6 @@ const deleteAsset = async (req, res, next) => {
 
 	try {
 		assertIsDefined(authenticatedUserId);
-
-		if (typeof parseInt(assetId) != "number") {
-			throw createHttpError(400, "Invalid asset ID!");
-		}
 
 		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 
