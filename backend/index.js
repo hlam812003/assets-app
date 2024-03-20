@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const session = require("express-session");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 
 const isHttpError = require("http-errors");
 const createHttpError = require("http-errors");
@@ -12,14 +12,8 @@ const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
 const adminRouter = require("./routes/admin");
 
-const departmentRouter = require("./routes/department");
-const searchRouter = require("./routes/search");
-const typeRouter = require("./routes/type");
-const statusRouter = require("./routes/status");
-
 const env = require("./utils/validateEnv");
 const { requiresAuth, adminAuth } = require("./middleware/auth");
-
 
 const PORT = env.PORT;
 
@@ -29,7 +23,7 @@ app.use(morgan("dev"));
 
 app.use(express.json());
 
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.use(
 	cors({
@@ -44,6 +38,11 @@ app.use(
 		extended: true,
 	})
 );
+
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Credentials", "true");
+	next();
+});
 
 app.use(
 	session({
@@ -64,14 +63,14 @@ app.use(
 // 	res.json({ message: "ok" });
 // });
 
-app.use("/status",statusRouter);
-app.use("/type", typeRouter);
-app.use("/department", departmentRouter);
-app.use("/user", userRouter);
+// app.use("/status",statusRouter);
+// app.use("/type", typeRouter);
+// app.use("/department", departmentRouter);
+// app.use("/user", userRouter);
 
+app.use("/user", userRouter);
 app.use("/asset", requiresAuth, assetRouter);
 app.use("/admin", requiresAuth, adminAuth, adminRouter);
-
 
 app.use((req, res, next) => {
 	next(createHttpError(404, "Endpoint not found!"));
