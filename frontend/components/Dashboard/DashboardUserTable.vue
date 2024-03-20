@@ -95,7 +95,7 @@ interface AssetData {
   status: string;
 };
 
-const { data: fetchData, pending, error, refresh } = useFetch('/api/assets', {
+const { data: fetchData, pending, error, refresh } = useFetch('/api/asset', {
   params: computed(() => ({ 
     limit: limit.value, 
     page: currentPage.value,
