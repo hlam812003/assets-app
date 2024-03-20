@@ -105,7 +105,6 @@ const showModal = (asset: AssetData) => {
   isModalVisible.value = true;
 };
 
-// Method to close modal
 const closeModal = () => {
   isModalVisible.value = false;
 };
