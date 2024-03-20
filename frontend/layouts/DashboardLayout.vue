@@ -1,6 +1,7 @@
 <template>
     <section class="main__dashboard animate__animated animate__fadeIn">
-        <DashboardNavbar v-if="userInfo" :userInfo="userInfo.username ?? 'Unknown User'"/>
+        <!--  v-if="userInfo" :userInfo="userInfo.username ?? 'Unknown User'" -->
+        <DashboardNavbar />
         <div class="main__dashboard--body">
             <slot />
         </div>

@@ -8,11 +8,9 @@
         <Icon icon="ant-design:loading-outlined" style="color: black" class="animate-spin text-[18px]"/>
       </div>
     </div>
-    <div v-else-if="error">
-      <div class="w-full h-[192px] flex items-center justify-center gap-[12px]">
-        <p class="font-sans text-[16px] text-[red] font-normal">An error occurred while loading data.</p>
-        <Icon icon="material-symbols:error-outline" style="color: #ff0000" class="text-[18px]"/>
-      </div>
+    <div v-else-if="!pending && !error && assets.length === 0" class="w-full h-[192px] flex items-center justify-center gap-[6px]">
+      <Icon icon="material-symbols:error-outline" style="color: #ff0000" class="text-[18px]"/>
+      <p class="font-sans text-[16px] text-[red] font-normal">An error occurred while loading data.</p>
     </div>
     <div v-else class="dashboard__table--wrapper">
         <div class="dashboard__table--header">
@@ -30,11 +28,16 @@
                 <div class="dashboard__assets--content dashboard__assets--type">{{ asset.asset_type }}</div>
                 <div class="dashboard__assets--content dashboard__assets--department">{{ asset.department_id }}</div>
                 <div class="dashboard__assets--content dashboard__assets--status">{{ asset.status }}</div>
-                <div class="dashboard__assets--content dashboard__assets--view">
+                <div class="dashboard__assets--content dashboard__assets--view" @click="showModal(asset)">
                     <img src="/ele3.png">
                 </div>
             </div>
         </div>
+        <DashboardAssetModal 
+          v-if="isModalVisible"
+          :asset="selectedAsset"
+          @close="closeModal"
+        />
         <div class="dashboard__assets--footer">
           <div class="dashboard__assets--footerContent">
               Show up {{ startIndex }} to {{ endIndex }} of {{ totalItems }} items
@@ -64,11 +67,14 @@
 </template>
 
 <script setup lang="ts">
+import DashboardAssetModal from '~/components/Dashboard/DashboardAssetModal.vue';
 import { Icon } from '@iconify/vue';
 
 const currentPage = ref(1);
 const limit = ref(5);
 const isRefreshing = ref(false);
+const selectedAsset = ref({});
+const isModalVisible = ref(false);
 
 const props = defineProps({
   searchQuery: String
@@ -93,6 +99,16 @@ const { data: fetchData, pending, error, refresh } = useFetch('/api/assets', {
 
 const assets = computed(() => (fetchData.value as { assets: AssetData[]; totalAssets: number }).assets ?? []);
 const totalItems = computed(() => (fetchData.value as { assets: AssetData[]; totalAssets: number }).totalAssets ?? 0);
+
+const showModal = (asset: AssetData) => {
+  selectedAsset.value = asset;
+  isModalVisible.value = true;
+};
+
+// Method to close modal
+const closeModal = () => {
+  isModalVisible.value = false;
+};
 
 const nextPage = () => {
   if (currentPage.value * limit.value < totalItems.value) {
