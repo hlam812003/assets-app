@@ -1,6 +1,6 @@
 <template>
-    <!-- animate__animated animate__fadeInUp animate__fast -->
-    <div id="DashboardAssets" class="dashboard__assets">
+    <!--  -->
+    <div id="DashboardAssets" class="dashboard__assets animate__animated animate__fadeInUp animate__fast">
         <div class="assets__header">asset management</div>
         <div class="assets__options--wrapper">
             <div class="assets__options--left">
