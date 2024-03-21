@@ -6,15 +6,17 @@ export default defineEventHandler(async (event) => {
 	try {
 		const query = getQuery(event);
 		const pageIndex = query.page || "1";
-		const searchQuery = query.search_query || "";
+		const itemLimit = query.limit || "5";
+		const searchQuery = query.search || "";
         
 		const res = await axios.get(`/api/asset`, {
 			params: {
 				page: pageIndex,
-				search_query: searchQuery,
+				limit: itemLimit,
+				search: searchQuery,
 			},
 		});
-
+		
 		const { assets, total } = res.data;
 
 		return {

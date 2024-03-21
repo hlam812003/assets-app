@@ -41,16 +41,16 @@
                         </div>
                     </div>
                     <div class="asset__modal--bodyTop-right">
-                        <img src="/test.png" class="asset__img">
+                        <img :src="isErrorImg ? '/errorImg.png' : asset.asset_img" class="asset__img">
                         <button class="asset__import--btn">import photo</button>
                     </div>
                 </div>
                 <div class="asset__modal--description">
                     <div class="asset__modal--descriptionTitle">Description:</div>
-                    <div class="asset__modal--descriptionContent">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <div class="asset__modal--descriptionContent">{{ asset.description }}</div>
                 </div>
                 <div class="asset__modal--actions">
-                    <button class="asset__btn add">add</button>
+                    <button class="asset__btn add">accept</button>
                     <button class="asset__btn edit">edit</button>
                     <button class="asset__btn delete">delete</button>
                 </div>
@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 const isClosing = ref(false);
+const isErrorImg = ref(true);
 
 const emit = defineEmits(['close']);
 

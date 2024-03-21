@@ -1,9 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	devtools: { enabled: true },
-	// routeRules: {
-	// 	"/api/**": { proxy: "localhost:3001/**" },
-	// },
 	nitro: {
 		devProxy: {
 			"/api": {

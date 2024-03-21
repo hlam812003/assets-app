@@ -3,8 +3,7 @@ const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
 const isNumber = require("../utils/isNumber");
 const assertIsDefined = require("../utils/assertIsDefined");
-const ROLE = require("../utils/role")
-
+const ROLE = require("../utils/role");
 
 /**
  * GET query parameters:
@@ -37,10 +36,10 @@ const getAssets = async (req, res, next) => {
 
 		if (authenticatedUserRole == ROLE.Admin) {
 			if (isNumber(department)) {
-				whereConditions.push(`department_id = ${department}`);
+				whereConditions.push(`asset.department_id = ${department}`);
 			}
 		} else {
-			whereConditions.push(`department_id = ${authenticatedUserDepartmentId}`);
+			whereConditions.push(`asset.department_id = ${authenticatedUserDepartmentId}`);
 		}
 
 		if (type) {
@@ -83,7 +82,13 @@ const getAssets = async (req, res, next) => {
 			end = page == NUMBER_OF_PAGES ? TOTAL : ITEMS_PER_PAGE * page;
 		}
 
-		const [assets] = await pool.query(`SELECT * FROM asset\n` + WHERE_CLAUSE + limitClause);
+		const [assets] = await pool.query(
+			`SELECT asset.*, department.department_name 
+			FROM asset 
+			LEFT JOIN department ON asset.department_id = department.department_id\n` +
+				WHERE_CLAUSE +
+				limitClause
+		);
 
 		res.status(200).json({
 			assets: assets,
@@ -106,7 +111,13 @@ const getAsset = async (req, res, next) => {
 	try {
 		assertIsDefined(authenticatedUserId);
 
-		const [asset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
+		const [asset] = await pool.query(
+			`SELECT asset.*, department.department_name 
+			FROM asset 
+			LEFT JOIN department ON asset.department_id = department.department_id
+			WHERE asset_id = ?`,
+			[assetId]
+		);
 
 		if (isEmpty(asset)) {
 			throw createHttpError(404, "Asset not found!");
@@ -253,7 +264,7 @@ const deleteAsset = async (req, res, next) => {
 
 		const [result] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [assetId]);
 
-		res.status(204).json(asset);
+		res.sendStatus(204);
 	} catch (error) {
 		next(error);
 	}

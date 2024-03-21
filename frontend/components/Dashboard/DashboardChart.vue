@@ -1,5 +1,5 @@
 <template>
-    <ClientOnly fallback="Loading...">
+    <ClientOnly>
         <Doughnut 
             :data="props.chartData"
             :options="props.chartOptions"

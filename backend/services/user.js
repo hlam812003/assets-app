@@ -1,7 +1,6 @@
 const createHttpError = require("http-errors");
 const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
-const bcrypt = require("bcrypt");
 
 const getAuthenticatedUser = async (req, res, next) => {
 	try {
