@@ -262,7 +262,9 @@ const deleteAsset = async (req, res, next) => {
 			throw createHttpError(401, "You are not allowed to access this asset!");
 		}
 
-		const [result] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [assetId]);
+		const [deleteMaintenance] = await pool.query(`DELETE FROM maintenance WHERE asset_id = ?`, [assetId]);
+		const [deleteAudit] = await pool.query(`DELETE FROM audit WHERE asset_id = ?`, [assetId]);
+		const [deleteAsset] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [assetId]);
 
 		res.sendStatus(204);
 	} catch (error) {
