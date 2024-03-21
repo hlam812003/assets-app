@@ -9,7 +9,7 @@
             <SearchBar color="users" placeholder="Input username..." @search="handleSearch" />
         </div>
         <div class="w-full flex items-center justify-center mt-[19px]">
-            <DashboardUserTable :search-query="searchQuery"/>
+            <DashboardUserTable :search-query="search"/>
         </div>    
     </div>
 </template>
@@ -19,10 +19,10 @@ import FilterBar from './Options/FilterBar.vue';
 import SearchBar from './Options/SearchBar.vue';
 import DashboardUserTable from './DashboardUserTable.vue';
 
-const searchQuery = ref('');
+const search = ref('');
 
 const handleSearch = (query: string) => {
-  searchQuery.value = query;
+  search.value = query;
 };
 
 </script>

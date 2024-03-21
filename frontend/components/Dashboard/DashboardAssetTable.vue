@@ -26,7 +26,7 @@
                 <div class="dashboard__assets--content dashboard__assets--id">{{ asset.asset_id }}</div>
                 <div class="dashboard__assets--content dashboard__assets--name">{{ asset.asset_name }}</div>
                 <div class="dashboard__assets--content dashboard__assets--type">{{ asset.asset_type }}</div>
-                <div class="dashboard__assets--content dashboard__assets--department">{{ asset.department_id }}</div>
+                <div class="dashboard__assets--content dashboard__assets--department">{{ asset.department_name }}</div>
                 <div class="dashboard__assets--content dashboard__assets--status">{{ asset.status }}</div>
                 <div class="dashboard__assets--content dashboard__assets--view" @click="showModal(asset)">
                     <img src="/ele3.png">
@@ -77,7 +77,7 @@ const selectedAsset = ref({});
 const isModalVisible = ref(false);
 
 const props = defineProps({
-  searchQuery: String
+  search: String
 });
 
 interface AssetData {
@@ -85,6 +85,7 @@ interface AssetData {
   asset_name: string;
   asset_type: string;
   department_id: string;
+  department_name: string;
   image: string;
   status: string;
 };
@@ -95,11 +96,11 @@ const { data: assetsData, pending, error, refresh } = await useAsyncData(
     params: {
       page: currentPage.value,
       limit: limit.value,
-      search: props.searchQuery
+      search: props.search
     }
   }),
   {
-    watch: [currentPage, limit, () => props.searchQuery],
+    watch: [currentPage, limit, () => props.search],
   }
 );
 
