@@ -85,6 +85,7 @@ interface AssetData {
   asset_name: string;
   asset_type: string;
   department_id: string;
+  image: string;
   status: string;
 };
 
