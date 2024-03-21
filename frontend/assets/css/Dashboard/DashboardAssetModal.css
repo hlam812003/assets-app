@@ -11,7 +11,8 @@
     @apply w-full h-[49.132px] pl-[32.03px] bg-[#97E4E4] border border-solid border-[#00000033] flex items-center gap-[12px];
 }
 
-.asset__modal--container .asset__modal--wrapper .asset__modal--header .close__modal {
+.asset__modal--container .asset__modal--wrapper .asset__modal--header .close__modal,
+.asset__modal--container .asset__modal--wrapper .import__photo--container .import__photo--wrapper .import__photo--header .close__modal {
     @apply w-[32.033px] h-[30.824px] cursor-pointer hover:opacity-75 transition-all;
 }
 
@@ -32,19 +33,32 @@
 }
 
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem {
-    @apply flex items-center justify-between w-full gap-[32px];
+    @apply flex items-center justify-between w-full gap-[32px] relative;
 }
 
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .asset__modal--bodyTop-leftItemTitle {
     @apply font-sans text-[16px] font-normal text-[#081031] italic;
 }
 
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .select__menu--wrapper {
+    @apply absolute w-[215.224px] left-[-.8px] top-[30px] z-10 transition-all;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .select__menu--wrapper .select__menu--item {
+    @apply w-full h-[25px] flex items-center justify-center rounded-[1px] text-[#081031] font-sans text-[13px] font-light border border-solid border-[#D9D9D9] bg-[#fff] cursor-pointer transition-all hover:bg-[#D9D9D9];
+}
+
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem input {
     @apply w-[215.224px] h-[28px] border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[12px] font-sans text-[#000] text-[16px] font-light;
 }
 
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem input.disabled,
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn.disabled {
+    @apply bg-[#dbdbdb];
+}
+
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn {
-    @apply w-[215.224px] h-[28px] relative border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[11px] cursor-pointer;
+    @apply w-[215.224px] h-[28px] relative border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[11px] cursor-pointer relative;
 }
 
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn span {
@@ -97,4 +111,29 @@
 
 .asset__modal--container .asset__modal--wrapper .asset__modal--footer {
     @apply absolute bottom-0 w-full h-[23.762px] flex items-center pl-[42px] border border-solid border-[#00000033] bg-[#97e4e49e] font-sans text-[10px] italic font-normal text-[#919191];
+}
+
+.asset__modal--container .asset__modal--wrapper .import__photo--container {
+    @apply absolute w-full h-full top-1 left-0 z-10 flex justify-center items-center z-20;
+}
+
+.asset__modal--container .asset__modal--wrapper .import__photo--container .import__photo--wrapper {
+    @apply w-[350px] h-[200px] bg-[#FCFCFA] border border-solid border-[#0000001a];
+}
+
+.asset__modal--container .asset__modal--wrapper .import__photo--container .import__photo--wrapper .import__photo--header {
+    @apply w-full h-[49.132px] pl-[22.03px] bg-[#97E4E4] border border-solid border-[#00000033] flex items-center gap-[12px];
+}
+
+.asset__modal--container .asset__modal--wrapper .import__photo--container .import__photo--wrapper .import__photo--header .import__photo--headerText {
+    @apply font-sans text-[17px] font-normal text-[#081031] italic;
+}
+
+.import__photo--input {
+    @apply w-[250.224px] h-[28px] border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[12px] font-sans text-[#000] text-[16px] font-light;
+}
+
+.import__photo--btn {
+    @apply w-[80.237px] h-[28px] rounded-[5px] bg-[#D5E4FA] outline-none border border-solid border-[#00000080] cursor-pointer hover:opacity-75 transition-all flex items-center justify-center font-sans text-[17px] capitalize font-normal text-[#081031];
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }

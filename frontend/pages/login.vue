@@ -25,7 +25,7 @@ import axios from "axios";
 
 import LoadingButton from '~/components/LoadingButton.vue';
 
-import auth from '~/server/services/auth.services';
+// import auth from '~/server/services/auth.services';
 import { useUserStore } from '~/stores/User';
 
 const router = useRouter();

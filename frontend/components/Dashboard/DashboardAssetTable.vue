@@ -37,6 +37,7 @@
           v-if="isModalVisible"
           :asset="selectedAsset"
           @close="closeModal"
+          @updateSuccess="refreshTable"
         />
         <div class="dashboard__assets--footer">
           <div class="dashboard__assets--footerContent">
@@ -90,7 +91,7 @@ interface AssetData {
   status: string;
 };
 
-const { data: assetsData, pending, error, refresh } = await useAsyncData(
+const { data: assetsData, pending, error, refresh } = await useLazyAsyncData(
   'asset',
   () => $fetch('/api/asset', {
     params: {
@@ -105,11 +106,10 @@ const { data: assetsData, pending, error, refresh } = await useAsyncData(
 );
 
 const assets = computed(() => (assetsData.value as { assets: AssetData[]; total: number }).assets ?? []);
-console.log(assetsData.value);
 const totalItems = computed(() => (assetsData.value as { assets: AssetData[]; total: number }).total ?? 0);
 
 const showModal = (asset: AssetData) => {
-  selectedAsset.value = asset;
+  selectedAsset.value = { ...asset };
   isModalVisible.value = true;
 };
 
@@ -150,14 +150,10 @@ const handleRefresh = async () => {
   });
 };
 
-// watch([currentPage, limit, props.searchQuery], async () => {
-//   console.log("Fetching new data...");
-//   await refresh().then(() => {
-//     console.log("Data refreshed:", fetchData.value);
-//   }).catch((error) => {
-//     console.error("Error refreshing data:", error);
-//   });
-// }, { immediate: true });
+const refreshTable = () => {
+  // currentPage.value = 1;
+  handleRefresh();
+};
 
 </script>
 
