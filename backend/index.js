@@ -13,6 +13,7 @@ const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
 const adminRouter = require("./routes/admin");
 const dashboardRouter = require("./routes/dashboard");
+const departmentListRouter = require("./routes/department");
 
 const env = require("./utils/validateEnv");
 const { requiresAuth, adminAuth } = require("./middleware/auth");
@@ -73,6 +74,7 @@ app.use(
 // app.use("/department", departmentRouter);
 // app.use("/user", userRouter);
 
+app.use("/departmentList", departmentListRouter);
 app.use("/user", userRouter);
 app.use("/asset", requiresAuth, assetRouter);
 app.use("/admin", requiresAuth, adminAuth, adminRouter);
