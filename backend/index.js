@@ -12,6 +12,7 @@ const createHttpError = require("http-errors");
 const userRouter = require("./routes/user");
 const assetRouter = require("./routes/asset");
 const adminRouter = require("./routes/admin");
+const dashboardRouter = require("./routes/dashboard");
 
 const env = require("./utils/validateEnv");
 const { requiresAuth, adminAuth } = require("./middleware/auth");
@@ -75,6 +76,7 @@ app.use(
 app.use("/user", userRouter);
 app.use("/asset", requiresAuth, assetRouter);
 app.use("/admin", requiresAuth, adminAuth, adminRouter);
+app.use("/dashboard", requiresAuth, dashboardRouter);
 
 app.use((req, res, next) => {
 	next(createHttpError(404, "Endpoint not found!"));
