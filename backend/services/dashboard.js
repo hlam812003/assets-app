@@ -46,4 +46,25 @@ const getDepartmentStatistics = async (req, res, next) => {
 	}
 };
 
-module.exports = { getGeneralStatistics, getDepartmentStatistics };
+const getPieChart = async (req, res, next) => {
+	try {
+		const [availableCount] = await pool.query(`SELECT COUNT(*) FROM asset WHERE status='In stock'`);
+		const [totalCount] = await pool.query(`SELECT COUNT(*) FROM asset`);
+
+		let available = Math.ceil((availableCount[0]["COUNT(*)"] / totalCount[0]["COUNT(*)"]) * 100);
+		let inUsing = 100 - available;
+
+		res.status(201).json({
+			available: available,
+			in_using: inUsing,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+module.exports = {
+	getGeneralStatistics,
+	getDepartmentStatistics,
+	getPieChart,
+};
