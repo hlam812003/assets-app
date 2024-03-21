@@ -13,6 +13,4 @@ router.patch("/:assetId", AssetService.updateAsset);
 
 router.delete("/:assetId", AssetService.deleteAsset);
 
-//router.get("/deapartment/:departmentID", AssetService.getAssetsByDepartmentId);
-
 module.exports = router;
