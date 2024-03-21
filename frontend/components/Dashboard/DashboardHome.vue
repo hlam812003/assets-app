@@ -36,12 +36,17 @@ import DashboardHomeTotalItem from './DashboardHomeTotalItem.vue';
 import DashboardChart from './DashboardChart.vue';
 import DashboardTotalTable from './DashboardTotalTable.vue';
 
+import generalService from '~/server/services/general.services';
+
+const generalData = await generalService.getAllGenerals();
+// console.log(generalData);
+
 const chartData = reactive({
     labels: ['In using', 'Available'],
     datasets: [
         {
             label: 'Stauts',
-            data: [50, 50],
+            data: [44, 56],
             backgroundColor: [
                 '#517EFF',
                 '#5252FD',
@@ -84,25 +89,25 @@ const chartOptions = reactive({
 const assetsList = [
     {
         icon: "assetIcon",
-        count: 25,
+        count: `${generalData.type_of_asset}`,
         label: "Type of asset",
         color: "asset"
     },
     {
         icon: "availableIcon",
-        count: 6,
+        count: `${generalData.available}`,
         label: "Available",
         color: "available"
     },
     {
         icon: "maintenanceIcon",
-        count: 6,
+        count: `${generalData.under_maintenance}`,
         label: "Under Maintenance",
         color: "under-maintenance"
     },
     {
         icon: "userIcon2",
-        count: 6,
+        count: `${generalData.user_count}`,
         label: "User",
         color: "total-user"
     }

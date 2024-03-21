@@ -1,5 +1,5 @@
 <template>
-    <div id="DashboardUsers" class="dashboard__users">
+    <div id="DashboardUsers" class="dashboard__users animate__animated animate__fadeInUp animate__fast">
         <div class="users__header">user management</div>
         <div class="users__options--wrapper">
             <div class="users__options--left">

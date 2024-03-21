@@ -62,6 +62,8 @@ async function onFormSubmit(): Promise<void> {
 
     try {
         const loginSuccess = await userStore.loginUser(userName.value, passWord.value);
+
+        userStore.setUser({username: userName.value});
         
         if (!loginSuccess) {
             toast.add({
