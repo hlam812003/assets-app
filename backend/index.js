@@ -14,6 +14,10 @@ const assetRouter = require("./routes/asset");
 const adminRouter = require("./routes/admin");
 const dashboardRouter = require("./routes/dashboard");
 
+
+const assetFilterRouter = require("./routes/asset_filter")
+
+
 const env = require("./utils/validateEnv");
 const { requiresAuth, adminAuth } = require("./middleware/auth");
 
@@ -64,17 +68,11 @@ app.use(
 	})
 );
 
-// app.get("/", (req, res) => {
-// 	res.json({ message: "ok" });
-// });
 
-// app.use("/status",statusRouter);
-// app.use("/type", typeRouter);
-// app.use("/department", departmentRouter);
-// app.use("/user", userRouter);
 
 app.use("/user", userRouter);
 app.use("/asset", requiresAuth, assetRouter);
+app.use("/asset_filter", requiresAuth, assetFilterRouter);
 app.use("/admin", requiresAuth, adminAuth, adminRouter);
 app.use("/dashboard", requiresAuth, dashboardRouter);
 

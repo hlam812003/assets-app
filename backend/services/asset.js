@@ -36,10 +36,10 @@ const getAssets = async (req, res, next) => {
 
 		if (authenticatedUserRole == ROLE.Admin) {
 			if (isNumber(department)) {
-				whereConditions.push(`department_id = ${department}`);
+				whereConditions.push(`asset.department_id = ${department}`);
 			}
 		} else {
-			whereConditions.push(`department_id = ${authenticatedUserDepartmentId}`);
+			whereConditions.push(`asset.department_id = ${authenticatedUserDepartmentId}`);
 		}
 
 		if (type) {
@@ -262,7 +262,9 @@ const deleteAsset = async (req, res, next) => {
 			throw createHttpError(401, "You are not allowed to access this asset!");
 		}
 
-		const [result] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [assetId]);
+		const [deleteMaintenance] = await pool.query(`DELETE FROM maintenance WHERE asset_id = ?`, [assetId]);
+		const [deleteAudit] = await pool.query(`DELETE FROM audit WHERE asset_id = ?`, [assetId]);
+		const [deleteAsset] = await pool.query(`DELETE FROM asset WHERE asset_id = ?`, [assetId]);
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -270,46 +272,49 @@ const deleteAsset = async (req, res, next) => {
 	}
 };
 
-const getAssetsByDepartmentId = async (req, res, next) => {
-	const departmentID = req.params.departmentID;
-	try {
-		const [assets] = await pool.query("SELECT * FROM asset WHERE department_id = ?", [
-			departmentID,
-		]);
-		if (!assets.length) {
-			throw createHttpError(404, "No assets found for the given department!");
-		}
-		res.status(200).json(assets);
-	} catch (error) {
-		next(error);
-	}
-};
+// const getAssetsByDepartmentId = async (req, res, next) => {
+// 	const departmentID = req.params.departmentID;
+// 	try {
+// 		const [assets] = await pool.query("SELECT * FROM asset WHERE department_id = ?", [
+// 			departmentID,
+// 		]);
+// 		if (!assets.length) {
+// 			throw createHttpError(404, "No assets found for the given department!");
+// 		}
+// 		res.status(200).json(assets);
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
 
-const getAssetsByType = async (req, res, next) => {
-	const type = req.params.type;
-	try {
-		const [assets] = await pool.query("SELECT * FROM asset WHERE asset_type = ?", [type]);
-		if (!assets.length) {
-			throw createHttpError(404, "No assets found for the given department!");
-		}
-		res.status(200).json(assets);
-	} catch (error) {
-		next(error);
-	}
-};
+// const getAssetsByType = async (req, res, next) => {
+// 	const type = req.params.type;
+// 	try {
+// 		const [assets] = await pool.query("SELECT * FROM asset WHERE asset_type = ?", [type]);
+// 		if (!assets.length) {
+// 			throw createHttpError(404, "No assets found for the given department!");
+// 		}
+// 		res.status(200).json(assets);
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
 
-const getAssetsByStatus = async (req, res, next) => {
-	const assetStatus = req.params.assetStatus;
-	try {
-		const [assets] = await pool.query("SELECT * FROM asset WHERE status = ?", [assetStatus]);
-		if (!assets.length) {
-			throw createHttpError(404, "No assets found for the given department!");
-		}
-		res.status(200).json(assets);
-	} catch (error) {
-		next(error);
-	}
-};
+// const getAssetsByStatus = async (req, res, next) => {
+// 	const assetStatus = req.params.assetStatus;
+// 	try {
+// 		const [assets] = await pool.query("SELECT * FROM asset WHERE status = ?", [assetStatus]);
+// 		if (!assets.length) {
+// 			throw createHttpError(404, "No assets found for the given department!");
+// 		}
+// 		res.status(200).json(assets);
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// };
+
+
+
 
 module.exports = {
 	getAssets,
@@ -317,7 +322,4 @@ module.exports = {
 	createAsset,
 	updateAsset,
 	deleteAsset,
-	getAssetsByDepartmentId,
-	getAssetsByType,
-	getAssetsByStatus,
 };

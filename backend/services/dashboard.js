@@ -32,5 +32,4 @@ const getStatistics = async (req, res, next) => {
         next(createHttpError(500, "Internal Server Error"));
     }
 };
-
 module.exports = { getStatistics };
