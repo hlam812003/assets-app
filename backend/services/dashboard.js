@@ -18,12 +18,29 @@ const getStatistics = async (req, res, next) => {
         const inStockQuery = "SELECT COUNT(*) AS in_stock FROM asset WHERE status = 'in stock'";
         const [inStockResult] = await pool.query(inStockQuery);
 
+        const userCountQuery = "SELECT COUNT(*) AS user_count FROM users";
+        const [userCountResult] = await pool.query(userCountQuery);
+
+        // Query to select distinct asset types
+        const typeCountQuery = `
+            SELECT COUNT(*) AS count
+            FROM (
+                SELECT DISTINCT asset_type
+                FROM asset
+            ) AS asset_types
+        `;
+        const [distinctTypeResult] = await pool.query(typeCountQuery);
+
+        // Count the number of distinct asset types
+        const typeCount = distinctTypeResult.length;
         // Prepare the response object
         const statistics = {
-            in_use: inUseResult[0].in_use,
             under_maintenance: maintenanceResult[0].under_maintenance,
-            in_stock: inStockResult[0].in_stock
+            available: inStockResult[0].in_stock,
+            user_count: userCountResult[0].user_count,
+            asset_types: distinctTypeResult[0].count
         };
+
         // console.log("aaa");
         // console.log(inUseResult);
         res.json(statistics);
