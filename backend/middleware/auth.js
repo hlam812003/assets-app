@@ -1,4 +1,5 @@
 const createHttpError = require("http-errors");
+const ROLE = require("../utils/role")
 
 const requiresAuth = (req, res, next) => {
 	if (req.session.userId) {
@@ -9,7 +10,7 @@ const requiresAuth = (req, res, next) => {
 };
 
 const adminAuth = (req, res, next) => {
-	if (req.session.role == "Admin") {
+	if (req.session.role == ROLE.Admin) {
 		next();
 	} else {
 		throw createHttpError(401, "You are not an administrator!");

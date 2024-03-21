@@ -3,11 +3,8 @@ const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
 const isNumber = require("../utils/isNumber");
 const assertIsDefined = require("../utils/assertIsDefined");
+const ROLE = require("../utils/role")
 
-const ROLE = {
-	ADMIN: "Admin",
-	MANAGER: "Manager",
-};
 
 /**
  * GET query parameters:
@@ -38,7 +35,7 @@ const getAssets = async (req, res, next) => {
 			whereConditions.push(`asset_name LIKE '%${search}%'`);
 		}
 
-		if (authenticatedUserRole == ROLE.ADMIN) {
+		if (authenticatedUserRole == ROLE.Admin) {
 			if (isNumber(department)) {
 				whereConditions.push(`department_id = ${department}`);
 			}
@@ -116,7 +113,7 @@ const getAsset = async (req, res, next) => {
 		}
 
 		if (
-			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserRole != ROLE.Admin &&
 			authenticatedUserDepartmentId != asset[0].department_id
 		) {
 			throw createHttpError(401, "You are not allowed to access this asset!");
@@ -152,7 +149,7 @@ const createAsset = async (req, res, next) => {
 		}
 
 		if (
-			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserRole != ROLE.Admin &&
 			authenticatedUserDepartmentId != asset[0].department_id
 		) {
 			departmentId = authenticatedUserDepartmentId;
@@ -199,7 +196,7 @@ const updateAsset = async (req, res, next) => {
 			throw createHttpError(404, "Asset not found!");
 		}
 
-		if (authenticatedUserRole != ROLE.ADMIN) {
+		if (authenticatedUserRole != ROLE.Admin) {
 			if (authenticatedUserDepartmentId != asset[0].department_id) {
 				throw createHttpError(401, "You are not allowed to access this asset!");
 			} else {
@@ -248,7 +245,7 @@ const deleteAsset = async (req, res, next) => {
 		}
 
 		if (
-			authenticatedUserRole != ROLE.ADMIN &&
+			authenticatedUserRole != ROLE.Admin &&
 			authenticatedUserDepartmentId != asset[0].department_id
 		) {
 			throw createHttpError(401, "You are not allowed to access this asset!");
