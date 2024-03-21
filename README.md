@@ -27,9 +27,11 @@ The system is designed to facilitate periodic checking of an organization's asse
 
 The system operates within the following context:
 
-## 1. Asset Monitoring: The core functionality of the system is to monitor the status of the organization's assets periodically. This includes tracking asset conditions, and any changes or updates related to the assets.
+## 1. Asset Monitoring:
+The core functionality of the system is to monitor the status of the organization's assets periodically. This includes tracking asset conditions, and any changes or updates related to the assets.
 
-## 2. User Interface: The system features a simple and intuitive user interface that abstracts away technical complexities, enabling users with minimal technological knowledge to easily interact with the system and perform asset status checks.
+## 2. User Interface:
+The system features a simple and intuitive user interface that abstracts away technical complexities, enabling users with minimal technological knowledge to easily interact with the system and perform asset status checks.
 
 
 # Project Overview
