@@ -3,8 +3,8 @@ const pool = require("./db");
 const isEmpty = require("../utils/isEmpty");
 const assertIsDefined = require("../utils/assertIsDefined");
 const isNumber = require("../utils/isNumber");
-const ROLE = require("../utils/role")
-
+const ROLE = require("../utils/role");
+const bcrypt = require("bcrypt");
 
 const getUsers = async (req, res, next) => {
 	const authenticatedUserId = req.session.userId;
@@ -76,6 +76,7 @@ const getUsers = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const getUser = async (req, res, next) => {
 	const authenticatedUserId = req.session.userId;
 
@@ -101,6 +102,7 @@ const getUser = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const createUser = async (req, res, next) => {
 	const authenticatedUserId = req.session.userId;
 
@@ -109,33 +111,128 @@ const createUser = async (req, res, next) => {
 	try {
 		assertIsDefined(authenticatedUserId);
 
-		if (!firstName || !lastName || !departmentId || role || !username || !password) {
-			throw createHttpError(400, "Input is not ");
+		if (!firstName || !lastName || !departmentId || !role || !username || !password) {
+			throw createHttpError(400, "Missing fields!");
 		}
 
-		if (
-			authenticatedUserRole != ROLE.Admin &&
-			authenticatedUserDepartmentId != asset[0].department_id
-		) {
-			departmentId = authenticatedUserDepartmentId;
-		}
-
-		const [result] = await pool.query(
-			`INSERT INTO asset (asset_name, asset_type, asset_img, description, purchased_date, price, department_id, status) 
-			VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-			[firstName, lastName, role, username, password, price, departmentId, status]
+		const [existingAuthentication] = await pool.query(
+			`SELECT * FROM authentication WHERE username = ?`,
+			[username]
 		);
 
-		const newAssetId = result.insertId;
-		const [newAsset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [newAssetId]);
+		if (!isEmpty(existingAuthentication)) {
+			throw createHttpError(
+				409,
+				"Username already existed! Please choose a different one or sign in instead."
+			);
+		}
 
-		res.status(201).json(newAsset);
+		const [newUser] = await pool.query(
+			`INSERT INTO users (first_name, last_name, department_id, role) 
+			VALUES (?, ?, ?, ?)`,
+			[firstName, lastName, departmentId, role]
+		);
+
+		// const passwordHashed = await bcrypt.hash(password, 10);
+		const newUserId = newUser.insertId;
+
+		const [newAuthentication] = await pool.query(
+			`INSERT INTO authentication (user_id, username, password)
+			VALUES (?, ?, ?)`,
+			[newUserId, username, password]
+		);
+
+		const [result] = await pool.query(
+			`SELECT users.*, authentication.username
+			FROM users
+			LEFT JOIN authentication ON users.user_id = authentication.user_id
+			WHERE users.user_id = ?`,
+			[newUserId]
+		);
+
+		res.status(201).json(result);
 	} catch (error) {
 		next(error);
 	}
 };
-const updateUser = async (req, res, next) => {};
-const deleteUser = async (req, res, next) => {};
+
+const updateUser = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+
+	const userId = req.params.userId;
+
+	const { firstName, lastName, departmentId, role, username, password } = req.body;
+
+	try {
+		assertIsDefined(authenticatedUserId);
+
+		const [user] = await pool.query(
+			`SELECT users.*, authentication.username
+			FROM users
+			LEFT JOIN authentication ON users.user_id = authentication.user_id
+			WHERE users.user_id = ?`,
+			[userId]
+		);
+
+		if (isEmpty(user)) {
+			throw createHttpError(404, "User not found!");
+		}
+
+		const [result] = await pool.query(
+			`UPDATE users 
+
+			SET 
+			first_name = '${firstName ? firstName : user[0].first_name}', 
+			last_name = '${lastName ? lastName : user[0].last_name}', 
+			department_id = '${departmentId ? departmentId : user[0].department_id}', 
+			
+			WHERE user_id = ${userId}`
+		);
+
+		const [updatedAsset] = await pool.query(
+			`SELECT users.*, authentication.username
+			FROM users
+			LEFT JOIN authentication ON users.user_id = authentication.user_id
+			WHERE users.user_id = ?`,
+			[userId]
+		);
+
+		res.status(200).json(updatedAsset);
+	} catch (error) {
+		next(error);
+	}
+};
+
+const deleteUser = async (req, res, next) => {
+	const authenticatedUserId = req.session.userId;
+
+	const userId = req.params.userId;
+
+	try {
+		assertIsDefined(authenticatedUserId);
+
+		const [user] = await pool.query(
+			`SELECT users.*, authentication.username
+			FROM users
+			LEFT JOIN authentication ON users.user_id = authentication.user_id
+			WHERE users.user_id = ?`,
+			[userId]
+		);
+
+		if (isEmpty(user)) {
+			throw createHttpError(404, "User not found!");
+		}
+
+		const [deleteAuthentication] = await pool.query(
+			`DELETE FROM authentication WHERE user_id = ${userId}`
+		);
+		const [deleteUser] = await pool.query(`DELETE FROM users WHERE user_id = ${userId}`);
+
+		res.sendStatus(204);
+	} catch (error) {
+		next(error);
+	}
+};
 
 module.exports = {
 	getUsers,
