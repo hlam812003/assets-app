@@ -311,6 +311,25 @@ const getAssetsByStatus = async (req, res, next) => {
 	}
 };
 
+// get list of department 
+const getDepartmentlist = async (req, res, next) =>{
+	try{
+		const [assets]=await pool.query(`SELECT d.department_id, d.department_name, COUNT(*) as asset_count
+		FROM asset a
+		JOIN department d ON a.department_id = d.department_id
+		GROUP BY d.department_id`);
+		//if (!departments.length) {
+           // throw createHttpError(404, "No departments found!");
+        //}
+		if (!assets.length) {
+            throw createHttpError(404, "No departments found for the given assets!");
+        }
+        res.status(200).json(assets);
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
 	getAssets,
 	getAsset,
@@ -320,4 +339,5 @@ module.exports = {
 	getAssetsByDepartmentId,
 	getAssetsByType,
 	getAssetsByStatus,
+	getDepartmentlist
 };
