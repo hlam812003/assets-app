@@ -36,10 +36,10 @@ const getAssets = async (req, res, next) => {
 
 		if (authenticatedUserRole == ROLE.Admin) {
 			if (isNumber(department)) {
-				whereConditions.push(`department_id = ${department}`);
+				whereConditions.push(`asset.department_id = ${department}`);
 			}
 		} else {
-			whereConditions.push(`department_id = ${authenticatedUserDepartmentId}`);
+			whereConditions.push(`asset.department_id = ${authenticatedUserDepartmentId}`);
 		}
 
 		if (type) {
