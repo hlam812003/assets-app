@@ -47,7 +47,7 @@
                 </div>
                 <div class="asset__modal--description">
                     <div class="asset__modal--descriptionTitle">Description:</div>
-                    <div class="asset__modal--descriptionContent">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+                    <div class="asset__modal--descriptionContent">{{ asset.description }}</div>
                 </div>
                 <div class="asset__modal--actions">
                     <button class="asset__btn add">add</button>

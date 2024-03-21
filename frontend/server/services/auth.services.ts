@@ -5,13 +5,18 @@ axios.defaults.withCredentials = true;
 interface LoginData {
 	username?: string;
 	password?: string;
-}
+};
 
 const login = (data: LoginData) => {
 	return axios
 		.post("/api/user/signin", data)
 		.then((res) => {
 			console.log(res.data[0]);
+
+			if (res.data[0].role) {
+				
+			}
+
 			return res.data[0];
 		})
 		.catch((err) => {
