@@ -322,7 +322,7 @@ const getDepartmentlist = async (req, res, next) =>{
            // throw createHttpError(404, "No departments found!");
         //}
 		if (!assets.length) {
-            throw createHttpError(404, "No departments found for the given assets!");
+            throw createHttpError(404, "No departments found !");
         }
         res.status(200).json(assets);
     } catch (error) {
@@ -330,6 +330,36 @@ const getDepartmentlist = async (req, res, next) =>{
     }
 }
 
+// get list of type
+const getType = async (req, res, next) =>{
+	try{
+		const [assets]=await pool.query(`SELECT DISTINCT asset_type FROM asset`);
+		//if (!departments.length) {
+           // throw createHttpError(404, "No departments found!");
+        //}
+		if (!assets.length) {
+            throw createHttpError(404, "No asset type found!");
+        }
+        res.status(200).json(assets);
+    } catch (error) {
+        next(error);
+    }
+}
+//get status
+const getStatus = async (req, res, next) =>{
+	try{
+		const [assets]=await pool.query(`SELECT DISTINCT status FROM asset`);
+		//if (!departments.length) {
+           // throw createHttpError(404, "No departments found!");
+        //}
+		if (!assets.length) {
+            throw createHttpError(404, "No status type found!");
+        }
+        res.status(200).json(assets);
+    } catch (error) {
+        next(error);
+    }
+}
 module.exports = {
 	getAssets,
 	getAsset,
@@ -339,5 +369,7 @@ module.exports = {
 	getAssetsByDepartmentId,
 	getAssetsByType,
 	getAssetsByStatus,
-	getDepartmentlist
+	getDepartmentlist,
+	getType,
+	getStatus
 };
