@@ -7,4 +7,5 @@ module.exports = cleanEnv(process.env, {
 	MYSQL_DATABASE: str(),
 	PORT: port(),
 	SESSION_SECRET: str(),
+	MONGO_CONNECTION_STRING: str(),
 });

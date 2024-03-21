@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 // const cookieParser = require("cookie-parser");
 
 const isHttpError = require("http-errors");
@@ -56,6 +57,9 @@ app.use(
 			sameSite: "lax",
 		},
 		rolling: true,
+		store: MongoStore.create({
+			mongoUrl: env.MONGO_CONNECTION_STRING,
+		}),
 	})
 );
 
