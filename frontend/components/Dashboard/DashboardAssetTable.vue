@@ -46,7 +46,7 @@
             <button
               class="navigation__btn navigation__btn--left"
               :class="{ 'opacity-50': currentPage <= 1 }"
-              @click="prevPage"
+              @click="prevPage" 
               :disabled="currentPage <= 1"
             >
               <img src="/leftIcon.png">
@@ -85,20 +85,27 @@ interface AssetData {
   asset_name: string;
   asset_type: string;
   department_id: string;
+  image: string;
   status: string;
 };
 
-const { data: fetchData, pending, error, refresh } = useFetch('/api/asset', {
-  params: computed(() => ({ 
-    limit: limit.value, 
-    page: currentPage.value,
-    search_query: props.searchQuery 
-  })),
-  lazy: true
-});
+const { data: assetsData, pending, error, refresh } = await useAsyncData(
+  'asset',
+  () => $fetch('/api/asset', {
+    params: {
+      page: currentPage.value,
+      limit: limit.value,
+      search: props.searchQuery
+    }
+  }),
+  {
+    watch: [currentPage, limit, () => props.searchQuery],
+  }
+);
 
-const assets = computed(() => (fetchData.value as { assets: AssetData[]; totalAssets: number }).assets ?? []);
-const totalItems = computed(() => (fetchData.value as { assets: AssetData[]; totalAssets: number }).totalAssets ?? 0);
+const assets = computed(() => (assetsData.value as { assets: AssetData[]; total: number }).assets ?? []);
+console.log(assetsData.value);
+const totalItems = computed(() => (assetsData.value as { assets: AssetData[]; total: number }).total ?? 0);
 
 const showModal = (asset: AssetData) => {
   selectedAsset.value = asset;
@@ -112,12 +119,14 @@ const closeModal = () => {
 const nextPage = () => {
   if (currentPage.value * limit.value < totalItems.value) {
     currentPage.value++;
-  };
+    refresh();
+  }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
+    refresh();
   }
 };
 
@@ -139,6 +148,16 @@ const handleRefresh = async () => {
     isRefreshing.value = false;
   });
 };
+
+// watch([currentPage, limit, props.searchQuery], async () => {
+//   console.log("Fetching new data...");
+//   await refresh().then(() => {
+//     console.log("Data refreshed:", fetchData.value);
+//   }).catch((error) => {
+//     console.error("Error refreshing data:", error);
+//   });
+// }, { immediate: true });
+
 </script>
 
 <style scoped>
