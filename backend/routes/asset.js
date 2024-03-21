@@ -13,4 +13,5 @@ router.patch("/:assetId", AssetService.updateAsset);
 
 router.delete("/:assetId", AssetService.deleteAsset);
 
+
 module.exports = router;
