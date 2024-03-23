@@ -89,7 +89,7 @@ const getUser = async (req, res, next) => {
 			`SELECT users.*, authentication.username 
             FROM users 
             LEFT JOIN authentication ON users.user_id = authentication.user_id  
-            WHERE user_id = ?`,
+            WHERE users.user_id = ?`,
 			[userId]
 		);
 
