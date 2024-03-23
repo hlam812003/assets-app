@@ -141,7 +141,7 @@ const createAsset = async (req, res, next) => {
 	const authenticatedUserRole = req.session.role;
 	const authenticatedUserDepartmentId = req.session.departmentId;
 
-	const {
+	let {
 		assetName,
 		assetType,
 		assetImage,
@@ -187,7 +187,7 @@ const updateAsset = async (req, res, next) => {
 	const authenticatedUserDepartmentId = req.session.departmentId;
 
 	const assetId = req.params.assetId;
-	const {
+	let {
 		assetName,
 		assetType,
 		assetImage,

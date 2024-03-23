@@ -89,7 +89,7 @@ const getUser = async (req, res, next) => {
 			`SELECT users.*, authentication.username 
             FROM users 
             LEFT JOIN authentication ON users.user_id = authentication.user_id  
-            WHERE user_id = ?`,
+            WHERE users.user_id = ?`,
 			[userId]
 		);
 
@@ -184,12 +184,13 @@ const updateUser = async (req, res, next) => {
 			SET 
 			first_name = '${firstName ? firstName : user[0].first_name}', 
 			last_name = '${lastName ? lastName : user[0].last_name}', 
-			department_id = '${departmentId ? departmentId : user[0].department_id}', 
+			department_id = '${departmentId ? departmentId : user[0].department_id}',
+			role = '${role && userId != authenticatedUserId ? role : user[0].role}'
 			
 			WHERE user_id = ${userId}`
 		);
 
-		const [updatedAsset] = await pool.query(
+		const [updatedUser] = await pool.query(
 			`SELECT users.*, authentication.username
 			FROM users
 			LEFT JOIN authentication ON users.user_id = authentication.user_id
@@ -197,7 +198,7 @@ const updateUser = async (req, res, next) => {
 			[userId]
 		);
 
-		res.status(200).json(updatedAsset);
+		res.status(200).json(updatedUser);
 	} catch (error) {
 		next(error);
 	}
