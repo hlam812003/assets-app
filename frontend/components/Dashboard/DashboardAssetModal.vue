@@ -15,36 +15,41 @@
                     <div class="asset__modal--bodyTop-left">
                         <div class="asset__modal--bodyTop-leftItem">
                             <div class="asset__modal--bodyTop-leftItemTitle">Id:</div>
-                            <input type="text" :value="localAsset.asset_id" class="bg-[#dbdbdb]" name="assetId" id="assetId" readonly/>
+                            <input type="text" :value="localAsset.asset_id" class="bg-[#dbdbdb] cursor-not-allowed" name="assetId" id="assetId" readonly/>
                         </div>
                         <div class="asset__modal--bodyTop-leftItem">
                             <div class="asset__modal--bodyTop-leftItemTitle">Asset name:</div>
-                            <input type="text" v-model="localAsset.asset_name" :class="{ 'disabled': !isEditable }" name="assetName" id="assetName" :readonly="!isEditable"/>
+                            <input type="text" v-model="localAsset.asset_name" :class="{ 'disabled': !isEditable, 'not__allowed': !isAdmin }" name="assetName" id="assetName" :readonly="!isAdmin || !isEditable"/>
                         </div>
                         <div class="asset__modal--bodyTop-leftItem">
                             <div class="asset__modal--bodyTop-leftItemTitle">Asset type:</div>
-                            <input type="text" v-model="localAsset.asset_type" :class="{ 'disabled': !isEditable }" name="assetType" id="assetType" :readonly="!isEditable"/>
+                            <input type="text" v-model="localAsset.asset_type" :class="{ 'disabled': !isEditable, 'not__allowed': !isAdmin }" name="assetType" id="assetType" :readonly="!isAdmin || !isEditable"/>
                         </div>
                         <div class="asset__modal--bodyTop-leftItem">
                             <div class="asset__modal--bodyTop-leftItemTitle">Status:</div>
-                           <div class="modal__select--btn" :class="{ 'disabled': !isEditable }" :disabled="!isEditable" @click="isEditable && (showMenu = !showMenu)">
+                            <div class="modal__select--btn" :class="{ 'disabled': !isEditable }" :disabled="!isEditable" @click="toggleMenu()">
                                 <span>{{ localAsset.status }}</span>
                                 <img src="/caretIcon.png">
-                                <div class="select__menu--wrapper" v-if="showMenu">
-                                    <div class="select__menu--item" v-for="status in statusOptions" :key="status" @click="updateStatus(status)">
-                                      {{ status }}
-                                    </div>
+                                <div class="select__menu--wrapper" v-if="showMenu && isEditable">
+                                  <div
+                                    class="select__menu--item"
+                                    v-for="status in statusOptions"
+                                    :key="status"
+                                    @click="updateStatus(status)"
+                                  >
+                                    {{ status }}
+                                  </div>
                                 </div>
-                           </div> 
+                            </div>
                         </div>
                         <div class="asset__modal--bodyTop-leftItem">
                             <div class="asset__modal--bodyTop-leftItemTitle">Price:</div>
-                            <input type="text" v-model="localAsset.price" :class="{ 'disabled': !isEditable }" name="assetPrice" id="assetPrice" :readonly="!isEditable"/>
+                            <input type="text" v-model="localAsset.price" :class="{ 'disabled': !isEditable, 'not__allowed': !isAdmin }" name="assetPrice" id="assetPrice" :readonly="!isAdmin || !isEditable"/>
                         </div>
                     </div>
                     <div class="asset__modal--bodyTop-right">
                         <img :src="isErrorImg ? '/errorImg.png' : localAsset.asset_img" class="asset__img">
-                        <button class="asset__import--btn" :disabled="!isEditable" @click="isEditable && (showImportPhotoWrapper = !showImportPhotoWrapper)">import photo</button>
+                        <button v-if="isAdmin" :class="['asset__import--btn', { 'hidden': !isAdmin }]" class="asset__import--btn" :disabled="!isEditable" @click="isEditable && (showImportPhotoWrapper = !showImportPhotoWrapper)">import photo</button>
                     </div>
                 </div>
                 <div class="asset__modal--description">
@@ -52,10 +57,10 @@
                     <div class="asset__modal--descriptionContent">{{ localAsset.description }}</div>
                 </div>
                 <div class="asset__modal--actions">
-                    <button class="asset__btn add" @click="handleUpdate">accept</button>
+                    <button v-if="isAdmin || userStore.userInfo?.role === 'Manager'" class="asset__btn add" @click="handleUpdate">accept</button>
                     <button class="asset__btn edit" @click="toggleEdit">edit</button>
-                    <button class="asset__btn delete" @click="handleDelete">delete</button>
-                  </div>
+                    <button v-if="isAdmin" :class="['asset__btn delete', { 'hidden': !isAdmin }]" @click="handleDelete">delete</button>
+                </div>
             </div>
             <div class="asset__modal--footer">
                 Input Day : {{ localAsset.purchased_date }}
@@ -85,13 +90,21 @@
 </template>
 
 <script setup lang="ts">
-import assetService from '~/server/services/asset.services';
+import assetService from '~/services/asset.services';
+import { useUserStore } from '~/stores/User';
+
 const isClosing = ref(false);
 const isErrorImg = ref(false);
 const isEditable = ref(false);
 const showMenu = ref(false);
 const showImportPhotoWrapper = ref(false);
 const isCloseImportPhoto = ref(false);
+
+const userStore = useUserStore();
+
+const isAdmin = computed(() => {
+  return userStore.userInfo?.role === 'Admin';
+});
 
 const statusOptions = [
     'in use', 
@@ -119,6 +132,12 @@ const emitClose = () => {
     }, 750);
 };
 
+const toggleMenu = () => {
+  if (isEditable.value) {
+    showMenu.value = !showMenu.value;
+  }
+};
+
 const toggleEdit = () => {
     isEditable.value = !isEditable.value;
     showMenu.value = false;
@@ -127,37 +146,93 @@ const toggleEdit = () => {
 const toast = useToast();
 
 const handleUpdate = async () => {
-    const updateData = {
-        assetName: localAsset.asset_name,
-        assetType: localAsset.asset_type,
-        assetImage: localAsset.asset_img,
-        description: localAsset.description,
-        price: localAsset.price,
-        departmentId: localAsset.department_id,
-        status: localAsset.status,
+    let updateData = {};
+
+    if (isAdmin) {
+        updateData = {
+            assetName: localAsset.asset_name,
+            assetType: localAsset.asset_type,
+            assetImage: localAsset.asset_img,
+            description: localAsset.description,
+            price: localAsset.price,
+            departmentId: localAsset.department_id,
+            status: localAsset.status,
+        };
+
+        // await assetService.updateAsset(localAsset.asset_id, updateData).then(() => {
+        //     toast.add({
+        //         title: 'Successful!',
+        //         icon: 'i-heroicons-check-circle-solid',
+        //         color: 'green',
+        //         description: `Asset ${localAsset.asset_id} updated successfully!`,
+        //         timeout: 3000
+        //     });
+        // }).catch((err) => {
+        //     toast.add({
+        //         title: 'Error!',
+        //         icon: 'i-heroicons-no-symbol-solid',
+        //         color: 'red',
+        //         description: 'Failed to update asset, please try again!',
+        //         timeout: 3000
+        //     })
+        //     console.error('Failed to update asset', err);
+        // });
+    } else if (userStore.userInfo?.role === 'Manager') {
+        updateData = {
+            status: localAsset.status,
+        };
+        // await assetService.updateAsset(localAsset.asset_id, { status: localAsset.status }).then(() => {
+        //     toast.add({
+        //         title: 'Successful!',
+        //         icon: 'i-heroicons-check-circle-solid',
+        //         color: 'green',
+        //         description: `Stauts of asset ${localAsset.asset_id} updated successfully!`,
+        //         timeout: 3000
+        //     });
+        // }).catch((err) => {
+        //     toast.add({
+        //         title: 'Error!',
+        //         icon: 'i-heroicons-no-symbol-solid',
+        //         color: 'red',
+        //         description: 'Failed to update asset, please try again!',
+        //         timeout: 3000
+        //     })
+        //     console.error('Failed to update asset', err);
+        // });
+    } else {
+        toast.add({
+            title: 'Error!',
+            icon: 'i-heroicons-no-symbol-solid',
+            color: 'red',
+            description: 'You do not have permission to update this asset!',
+            timeout: 3000
+        });
     };
 
-        await assetService.updateAsset(localAsset.asset_id, updateData).then(() => {
+    try {
+        await assetService.updateAsset(localAsset.asset_id, updateData);
+
         toast.add({
-            title: 'Logged in successfully!',
+            title: 'Successful!',
             icon: 'i-heroicons-check-circle-solid',
             color: 'green',
             description: `Asset ${localAsset.asset_id} updated successfully!`,
             timeout: 3000
         });
+
         isEditable.value = false;
         emit('close');
         emit('updateSuccess');
-  }).catch((err) => {
-    toast.add({
-        title: 'Error!',
-        icon: 'i-heroicons-no-symbol-solid',
-        color: 'red',
-        description: 'Failed to update asset, please try again!',
-        timeout: 3000
-    })
-    console.error('Failed to update asset', err);
-  });
+    } catch (err) {
+        toast.add({
+            title: 'Error!',
+            icon: 'i-heroicons-no-symbol-solid',
+            color: 'red',
+            description: 'Failed to update asset, please try again!',
+            timeout: 3000
+        });
+        console.error('Failed to update asset', err);
+    };
 };
 
 const handleDelete = async () => {
@@ -184,8 +259,8 @@ const handleDelete = async () => {
 };
 
 function updateStatus(status: string) {
-  localAsset.status = status;
-  showMenu.value = false; 
+    localAsset.status = status;
+    showMenu.value = false;
 };
 
 const closeImportPhotoWrapper = () => {

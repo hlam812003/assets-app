@@ -57,6 +57,10 @@
     @apply bg-[#dbdbdb];
 }
 
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem input.not__allowed {
+    @apply bg-[#EFEFEF] cursor-not-allowed;
+}
+
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--bodyTop .asset__modal--bodyTop-left .asset__modal--bodyTop-leftItem .modal__select--btn {
     @apply w-[215.224px] h-[28px] relative border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[11px] cursor-pointer relative;
 }

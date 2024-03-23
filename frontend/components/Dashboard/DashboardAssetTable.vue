@@ -69,6 +69,7 @@
 
 <script setup lang="ts">
 import DashboardAssetModal from '~/components/Dashboard/DashboardAssetModal.vue';
+import { type AssetData } from '~/types/Asset';
 import { Icon } from '@iconify/vue';
 
 const currentPage = ref(1);
@@ -80,16 +81,6 @@ const isModalVisible = ref(false);
 const props = defineProps({
   search: String
 });
-
-interface AssetData {
-  asset_id: number;
-  asset_name: string;
-  asset_type: string;
-  department_id: string;
-  department_name: string;
-  image: string;
-  status: string;
-};
 
 const { data: assetsData, pending, error, refresh } = await useLazyAsyncData(
   'asset',

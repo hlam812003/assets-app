@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import generalService from '~/server/services/general.services';
+import generalService from '~/services/general.services';
 
 const generalData = await generalService.getAllDepartments();
 </script>

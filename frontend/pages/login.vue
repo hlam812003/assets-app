@@ -25,7 +25,7 @@ import axios from "axios";
 
 import LoadingButton from '~/components/LoadingButton.vue';
 
-// import auth from '~/server/services/auth.services';
+// import auth from '~/services/auth.services';
 import { useUserStore } from '~/stores/User';
 
 const router = useRouter();
@@ -62,8 +62,9 @@ async function onFormSubmit(): Promise<void> {
 
     try {
         const loginSuccess = await userStore.loginUser(userName.value, passWord.value);
+        console.log(loginSuccess);
 
-        userStore.setUser({username: userName.value});
+        // userStore.setUser({username: userName.value});
         
         if (!loginSuccess) {
             toast.add({

@@ -36,17 +36,17 @@ import DashboardHomeTotalItem from './DashboardHomeTotalItem.vue';
 import DashboardChart from './DashboardChart.vue';
 import DashboardTotalTable from './DashboardTotalTable.vue';
 
-import generalService from '~/server/services/general.services';
+import generalService from '~/services/general.services';
 
 const generalData = await generalService.getAllGenerals();
-// console.log(generalData);
+const pieChartData = await generalService.getPieChart();
 
 const chartData = reactive({
     labels: ['In using', 'Available'],
     datasets: [
         {
             label: 'Stauts',
-            data: [44, 56],
+            data: [pieChartData.in_using, pieChartData.available],
             backgroundColor: [
                 '#517EFF',
                 '#5252FD',
@@ -73,11 +73,7 @@ const chartOptions = reactive({
         },
         datalabels: {
             formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => {
-                    sum += data;
-                });
+                let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                 let percentage = Math.round((value * 100) / sum) + "%";
                 return percentage;
             },

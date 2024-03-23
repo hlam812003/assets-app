@@ -9,6 +9,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
+      "@components/*": ["./components/*"],
+      "@types/*": ["../../types/*"],
       "#imports": [".nuxt/imports.d.ts"],
       "~/*": [
         "./*"

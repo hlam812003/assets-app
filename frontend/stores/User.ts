@@ -1,12 +1,5 @@
-import auth from '../server/services/auth.services';
-
-export interface UserInfo {
-    username?: string;
-    password?: string;
-    firstName?: string;
-    lastName?: string;
-    role?: string;
-};
+import auth from '../services/auth.services';
+import { type UserInfo } from 'types/User';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -14,6 +7,7 @@ export const useUserStore = defineStore('user', {
       isLoggedIn: false
     }),
     actions: {
+      // rememberMe: boolean
       loginUser(username: string, password: string) {
         return auth.login({ username, password })
           .then((userData) => {
