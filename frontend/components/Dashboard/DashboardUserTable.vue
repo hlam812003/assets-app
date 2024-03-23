@@ -96,7 +96,6 @@ const { data: usersData, pending, error, refresh } = await useLazyAsyncData(
 );
 
 const users = computed(() => (usersData.value as { assets: UserInfo[]; total: number }).assets ?? []);
-console.log(users);
 const totalUsers = computed(() => (usersData.value as { users: UserInfo[]; total: number }).total ?? 0);
 
 const showModal = (user: UserInfo) => {

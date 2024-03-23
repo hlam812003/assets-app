@@ -59,7 +59,7 @@
                     <div class="user__modal--bodyTop-right">
                         <div class="user__modal--bodyTop-rightItem">
                             <div class="user__modal--bodyTop-rightItemTitle test">User id:</div>
-                            <input type="text" v-model="localUser.user_id" bg-[#dbdbdb] class="cursor-not-allowed" name="userId" id="userId" readonly/>
+                            <input type="text" v-model="localUser.user_id" class="bg-[#dbdbdb] cursor-not-allowed" name="userId" id="userId" readonly/>
                         </div>
                         <div class="user__modal--bodyTop-rightItem">
                             <div class="user__modal--bodyTop-rightItemTitle test2">Username:</div>
@@ -94,11 +94,7 @@ const isEditable = ref(false);
 const showDepartmentMenu = ref(false);
 const showRoleMenu = ref(false);
 
-const userStore = useUserStore();
 
-const isAdmin = computed(() => {
-  return userStore.userInfo?.role === 'Admin';
-});
 
 const departmentList = [
     '1', 
@@ -154,6 +150,7 @@ const toast = useToast();
 
 const handleUpdate = async () => {
     const updateData = {
+        
         firstName: localUser.first_name,
         lastName: localUser.last_name,
         departmentId: localUser.department_id,
