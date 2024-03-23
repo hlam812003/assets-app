@@ -5,6 +5,7 @@ export interface LoginData {
 
 export interface UserInfo {
     department_id?: number;
+    username?: string;
     user_id?: number;
     first_name?: string;
     last_name?: string;

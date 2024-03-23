@@ -3,30 +3,28 @@ import { type AssetData } from "types/Asset";
 
 axios.defaults.withCredentials = true;
 
-const updateAsset = (assetId: number, assetData: AssetData) => {
-  return axios
-    .patch(`/api/asset/${assetId}`, assetData)
-    .then(res => {
-        console.log(res.data);
-        return res.data;
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+const updateAsset = async (assetId: number, assetData: AssetData) => {
+  try {
+    const res = await axios
+      .patch(`/api/asset/${assetId}`, assetData);
+    console.log(res.data);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
-const deleteAsset = (assetId: number) => {
-  return axios
-    .delete(`/api/asset/${assetId}`)
-    .then(res => {
-        console.log(res.data);
-        return res.data;
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+const deleteAsset = async (assetId: number) => {
+  try {
+    const res = await axios
+      .delete(`/api/asset/${assetId}`);
+    console.log(res.data);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 export default {

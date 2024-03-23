@@ -95,6 +95,18 @@
     @apply font-sans text-[17px] font-normal text-[#081031] italic;
 }
 
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--description textarea.asset__modal--descriptionContent {
+    @apply w-full h-[86px] resize-none bg-transparent outline-none;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--description textarea.asset__modal--descriptionContent::-webkit-scrollbar {
+    @apply hidden;
+}
+
+.asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--description textarea.asset__modal--descriptionContent.not__allowed {
+    @apply cursor-not-allowed;
+}
+
 .asset__modal--container .asset__modal--wrapper .asset__modal--body .asset__modal--actions {
     @apply w-full flex items-center justify-end gap-[16px] mt-[29px] pr-[33px];
 }

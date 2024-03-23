@@ -34,5 +34,9 @@ export default defineNuxtConfig({
 				autoImports: ["defineStore"],
 			},
 		],
+		'maz-ui/nuxt'
 	],
+	plugins: [
+		'~/plugins/mazUI.client.ts',
+	]
 });

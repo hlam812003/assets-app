@@ -9,40 +9,37 @@ axios.defaults.withCredentials = true;
 //     total_users?: number;
 // };
 
-const getAllGenerals = () => {
-  return axios
-    .get(`/api/dashboard/general`)
-    .then(res => {
-        // console.log(res.data);
-        return res.data;
-    })
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+const getAllGenerals = async () => {
+  try {
+    const res = await axios
+      .get(`/api/dashboard/general`);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
-const getAllDepartments = () => {
-    return axios
-      .get(`/api/dashboard/department`)
-      .then(res => {
-          // console.log(res.data);
-          return res.data;
-      })
-      .catch(err => {
-        console.error(err);
-        throw err;
-      });
+const getAllDepartments = async () => {
+    try {
+    const res = await axios
+      .get(`/api/dashboard/department`);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
-const getPieChart = () => {
-    return axios
-      .get(`/api/dashboard/pie_chart`)
-      .then(res => res.data)
-      .catch(err => {
-        console.error("Error fetching pie chart data:", err);
-        throw err;
-      });
+const getPieChart = async () => {
+    try {
+    const res = await axios
+      .get(`/api/dashboard/pie_chart`);
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching pie chart data:", err);
+    throw err;
+  }
 };
 
 export default {

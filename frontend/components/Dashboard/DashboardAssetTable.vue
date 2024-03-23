@@ -24,7 +24,7 @@
         <div class="dashboard__assets--list">
             <div class="dashboard__assets--item" v-for="asset in assets" :key="asset.asset_id">
                 <div class="dashboard__assets--content dashboard__assets--id">{{ asset.asset_id }}</div>
-                <div class="dashboard__assets--content dashboard__assets--name">{{ asset.asset_name }}</div>
+                <div class="dashboard__assets--content dashboard__assets--name" :style="{ color: asset.asset_name === null ? 'red' : '' }">{{ asset.asset_name ?? "Unknow Asset" }}</div>
                 <div class="dashboard__assets--content dashboard__assets--type">{{ asset.asset_type }}</div>
                 <div class="dashboard__assets--content dashboard__assets--department">{{ asset.department_name }}</div>
                 <div class="dashboard__assets--content dashboard__assets--status">{{ asset.status }}</div>
@@ -46,16 +46,17 @@
           <div class="dashboard__assets--navigation">
             <button
               class="navigation__btn navigation__btn--left"
-              :class="{ 'opacity-50': currentPage <= 1 }"
+              :style="{ 'display': currentPage <= 1 ? 'none' : '' }"
               @click="prevPage" 
               :disabled="currentPage <= 1"
             >
               <img src="/leftIcon.png">
               back
             </button>
+            <span class="font-sans italic text-[12px] font-light text-[#2196F3]">{{ currentPage }}</span>
             <button
               class="navigation__btn navigation__btn--right"
-              :class="{ 'opacity-50': isLastPage }"
+              :style="{ 'display': isLastPage ? 'none' : '' }"
               @click="nextPage"
               :disabled="isLastPage"
               >

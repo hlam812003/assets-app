@@ -48,13 +48,13 @@
                         </div>
                     </div>
                     <div class="asset__modal--bodyTop-right">
-                        <img :src="isErrorImg ? '/errorImg.png' : localAsset.asset_img" class="asset__img">
+                        <img v-fullscreen-img :src="isErrorImg ? '/errorImg.png' : localAsset.asset_img" class="asset__img">
                         <button v-if="isAdmin" :class="['asset__import--btn', { 'hidden': !isAdmin }]" class="asset__import--btn" :disabled="!isEditable" @click="isEditable && (showImportPhotoWrapper = !showImportPhotoWrapper)">import photo</button>
                     </div>
                 </div>
                 <div class="asset__modal--description">
                     <div class="asset__modal--descriptionTitle">Description:</div>
-                    <div class="asset__modal--descriptionContent">{{ localAsset.description }}</div>
+                    <textarea class="asset__modal--descriptionContent" v-model="localAsset.description" :class="{ 'not__allowed': !isAdmin }" :readonly="!isAdmin || !isEditable">{{ localAsset.description }}</textarea>
                 </div>
                 <div class="asset__modal--actions">
                     <button v-if="isAdmin || userStore.userInfo?.role === 'Manager'" class="asset__btn add" @click="handleUpdate">accept</button>
@@ -92,6 +92,7 @@
 <script setup lang="ts">
 import assetService from '~/services/asset.services';
 import { useUserStore } from '~/stores/User';
+import { vFullscreenImg } from 'maz-ui';
 
 const isClosing = ref(false);
 const isErrorImg = ref(false);
@@ -155,7 +156,7 @@ const handleUpdate = async () => {
             assetImage: localAsset.asset_img,
             description: localAsset.description,
             price: localAsset.price,
-            departmentId: localAsset.department_id,
+            // departmentName: localAsset.department_name,
             status: localAsset.status,
         };
 

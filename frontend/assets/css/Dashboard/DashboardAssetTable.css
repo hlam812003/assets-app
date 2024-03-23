@@ -69,7 +69,7 @@
 }
 
 .dashboard__table--wrapper .dashboard__assets--footer .dashboard__assets--navigation {
-    @apply flex items-center gap-[19px] mr-[-5.8px];
+    @apply flex items-center gap-[10px] mr-[-5.8px];
 }
 
 .dashboard__table--wrapper .dashboard__assets--footer .dashboard__assets--navigation .navigation__btn {

@@ -14,7 +14,7 @@ import DashboardContent from '~/components/Dashboard/DashboardContent.vue';
 
 definePageMeta({
     layout: false,
-    middleware: 'auth'
+    // middleware: 'auth'
 });
 
 useHead({

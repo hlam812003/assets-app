@@ -180,13 +180,10 @@ const updateUser = async (req, res, next) => {
 
 		const [result] = await pool.query(
 			`UPDATE users 
-
 			SET 
 			first_name = '${firstName ? firstName : user[0].first_name}', 
 			last_name = '${lastName ? lastName : user[0].last_name}', 
-			department_id = '${departmentId ? departmentId : user[0].department_id}',
-			role = '${role && userId != authenticatedUserId ? role : user[0].role}'
-			
+			department_id = '${departmentId ? departmentId : user[0].department_id}'
 			WHERE user_id = ${userId}`
 		);
 

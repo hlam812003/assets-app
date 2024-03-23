@@ -1,0 +1,107 @@
+.user__modal--container {
+    @apply w-full h-full absolute top-[-50.5px] left-0 z-10 flex justify-center items-center; 
+}
+
+.user__modal--container .user__modal--wrapper {
+    @apply w-[717px] h-[395px] bg-[#FCFCFA] border border-solid border-[#0000001a] relative;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--header {
+    @apply w-full h-[49.132px] pl-[32.03px] bg-[#FFE992] border border-solid border-[#00000033] flex items-center gap-[12px];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--header .close__modal,
+.user__modal--container .user__modal--wrapper .import__photo--container .import__photo--wrapper .import__photo--header .close__modal {
+    @apply w-[32.033px] h-[30.824px] cursor-pointer hover:opacity-75 transition-all;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--header .user__modal--headerText {
+    @apply font-sans text-[17px] font-normal text-[#081031] italic;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body {
+    @apply w-full pl-[46px] pr-[40px] pt-[45px];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop {
+    @apply w-full flex items-start gap-[65px];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right {
+    @apply flex items-center flex-col gap-[8px];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right .user__modal--bodyTop-rightItem {
+    @apply flex items-center justify-between w-full gap-[18px] relative;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .user__modal--bodyTop-leftItemTitle,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right .user__modal--bodyTop-rightItem .user__modal--bodyTop-rightItemTitle.test {
+    @apply font-sans text-[16px] font-normal text-[#081031] italic;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .select__menu--wrapper {
+    @apply absolute w-[170px] left-[-.8px] top-[30px] z-10 transition-all;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .select__menu--wrapper .select__menu--item {
+    @apply w-full h-[25px] flex items-center justify-center rounded-[1px] text-[#081031] font-sans text-[13px] font-light border border-solid border-[#D9D9D9] bg-[#fff] cursor-pointer transition-all hover:bg-[#D9D9D9];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem input,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right .user__modal--bodyTop-rightItem input {
+    @apply w-[170px] h-[28px] border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[12px] font-sans text-[#000] text-[16px] font-light;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem input.disabled,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .modal__select--btn.disabled,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right .user__modal--bodyTop-rightItem input.disabled {
+    @apply bg-[#dbdbdb];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem input.not__allowed,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right .user__modal--bodyTop-rightItem input.not__allowed {
+    @apply bg-[#EFEFEF] cursor-not-allowed;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .modal__select--btn {
+    @apply w-[170px] h-[28px] relative border border-solid border-[#00000033] bg-[#EFEFEF] outline-none px-[11px] cursor-pointer relative;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .modal__select--btn span {
+    @apply font-sans text-[#000] text-[16px] font-light;
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-left .user__modal--bodyTop-leftItem .modal__select--btn img {
+    @apply w-[8.01px] h-[8.4px] absolute right-[6px] top-[10px];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--actions {
+    @apply w-full flex items-center justify-end gap-[16px] mt-[52px] pr-[18px];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--actions .user__btn {
+    @apply w-[80.237px] h-[28px] rounded-[5px] outline-none border border-solid border-[#00000080] cursor-pointer hover:opacity-75 transition-all flex items-center justify-center font-sans text-[17px] capitalize font-normal text-[#081031];
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--actions .user__btn.add,
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--actions .user__btn.edit {
+    @apply bg-[#D5E4FA]; 
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--actions .user__btn.delete {
+    @apply bg-[#FAE0D5];
+}
+
+.user__modal--container .user__modal--wrapper .user__modal--footer {
+    @apply absolute bottom-0 w-full h-[23.762px] flex items-center pl-[42px] border border-solid border-[#00000033] bg-[#ffe9929e] font-sans text-[10px] italic font-normal text-[#919191];
+}
+
+
+.user__modal--container .user__modal--wrapper .user__modal--body .user__modal--bodyTop .user__modal--bodyTop-right .user__modal--bodyTop-rightItem .user__modal--bodyTop-rightItemTitle.test2 {
+    @apply font-sans text-[16px] font-normal italic text-[#007737];
+}
