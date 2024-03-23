@@ -10,10 +10,9 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "test",
-            "database": "company",
-            "username": "root",
-            "password": "admin"
+            "name": "assets-app",
+            "database": "assets-app",
+            "username": "root"
         }
     ]
 }
