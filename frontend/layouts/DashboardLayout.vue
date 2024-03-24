@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import DashboardNavbar from '~/components/Dashboard/DashboardNavbar.vue';
-import { type UserInfo } from '../types/User';
+import type { UserInfo } from '../types/User';
 
 import { useUserStore } from '~/stores/User';
 

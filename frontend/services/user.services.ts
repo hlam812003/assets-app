@@ -1,5 +1,5 @@
 import axios from "axios";
-import { type UserInfo } from "types/User";
+import type { UserInfo } from "types/User";
 
 axios.defaults.withCredentials = true;
 

@@ -59,7 +59,7 @@
                 <div class="asset__modal--actions">
                     <button v-if="isAdmin || userStore.userInfo?.role === 'Manager'" class="asset__btn add" @click="handleUpdate">accept</button>
                     <button class="asset__btn edit" @click="toggleEdit">edit</button>
-                    <button v-if="isAdmin" :class="['asset__btn delete', { 'hidden': !isAdmin }]" @click="handleDelete">delete</button>
+                    <button v-if="isAdmin" :class="['asset__btn delete', { 'hidden': !isAdmin }]" @click="askToDelete">delete</button>
                 </div>
             </div>
             <div class="asset__modal--footer">
@@ -85,6 +85,10 @@
                     </div>
                 </div>
             </div>
+            <MazDialogPromise
+                :data="dataPromiseOne"
+                identifier="one"
+            />
         </div>
     </div>
 </template>
@@ -93,6 +97,10 @@
 import assetService from '~/services/asset.services';
 import { useUserStore } from '~/stores/User';
 import { vFullscreenImg } from 'maz-ui';
+import MazDialogPromise, {
+    useMazDialogPromise, type DialogData
+} from 'maz-ui/components/MazDialogPromise';
+import MazDialog from 'maz-ui/components/MazDialog';
 
 const isClosing = ref(false);
 const isErrorImg = ref(false);
@@ -100,6 +108,8 @@ const isEditable = ref(false);
 const showMenu = ref(false);
 const showImportPhotoWrapper = ref(false);
 const isCloseImportPhoto = ref(false);
+const confirmDialog = ref(false);
+const { showDialogAndWaitChoice } = useMazDialogPromise();
 
 const userStore = useUserStore();
 
@@ -107,12 +117,27 @@ const isAdmin = computed(() => {
   return userStore.userInfo?.role === 'Admin';
 });
 
+const dataPromiseOne: DialogData = {
+    title: 'Delete asset',
+    message: 'Are you sure you want to delete this asset?',
+};
+
 const statusOptions = [
     'in use', 
     'in stock', 
     'under maintenance', 
     'lost'
 ];
+
+const askToDelete = async () => {
+    try {
+        await showDialogAndWaitChoice("one");
+        handleDelete();
+        // confirmDialog.value = true;
+    } catch (err) {
+        console.log(err)
+    }
+};
 
 const emit = defineEmits(['close', 'updateSuccess']);
 

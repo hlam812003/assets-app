@@ -12,6 +12,7 @@
       "@components/*": ["./components/*"],
       "@types/*": ["../../types/*"],
       "#imports": [".nuxt/imports.d.ts"],
+      "#ui/types": ["./node_modules/@nuxt/ui/dist/runtime/types"],
       "~/*": [
         "./*"
       ],

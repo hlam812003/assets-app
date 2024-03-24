@@ -94,7 +94,7 @@ const isEditable = ref(false);
 const showDepartmentMenu = ref(false);
 const showRoleMenu = ref(false);
 
-
+const userStore = useUserStore();
 
 const departmentList = [
     '1', 
@@ -149,17 +149,26 @@ const toggleEdit = () => {
 const toast = useToast();
 
 const handleUpdate = async () => {
+    if (userStore.userInfo?.user_id === localUser.user_id && userStore.userInfo?.role !== localUser.role) {
+        toast.add({
+            title: 'Error!',
+            icon: 'i-heroicons-no-symbol-solid',
+            color: 'red',
+            description: 'You can not edit your own role!',
+            timeout: 3000
+        });
+        return;
+    };
+
     const updateData = {
         
         firstName: localUser.first_name,
         lastName: localUser.last_name,
         departmentId: localUser.department_id,
-        role: localUser.role,
+        role: userStore.userInfo?.user_id === localUser.user_id ? userStore.userInfo?.role : localUser.role,
         username: localUser.username,
         password: localUser.password,
     };
-
-    console.info(updateData["role"]);
 
     await userService.updateUser(localUser.user_id, updateData).then(() => {
         toast.add({

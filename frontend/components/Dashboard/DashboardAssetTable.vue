@@ -2,6 +2,36 @@
   <button class="refresh__btn" @click="handleRefresh">
     <img src="/refreshIcon.png" class="w-[22px] h-[22px]" :class="{'animate-spin': isRefreshing}">
   </button>
+  <button class="add__btn" @click="isCreateModalVisible = true">
+    <img src="/addIcon.png" class="w-[22px] h-[22px]">
+  </button>
+  <UModal v-model="isCreateModalVisible" prevent-close>
+    <UCard :ui="{ background: 'dark:bg-[#FCFCFA]', ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800'}">
+      <template #header>
+        <div class="flex items-center justify-between">
+          <h3 class="font-sans text-[17px] font-semibold text-gray-900 light:text-black">
+            Create new asset
+          </h3>
+          <UButton color="black" variant="solid" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isCreateModalVisible = false" />
+        </div>
+      </template>
+      <div class="p-4">
+        <UForm :validate="validate" :state="state" class="space-y-4" @submit.prevent="onSubmit">
+          <UFormGroup label="Email" name="email">
+            <UInput v-model="state.email" />
+          </UFormGroup>
+      
+          <UFormGroup label="Password" name="password">
+            <UInput v-model="state.password" type="password" />
+          </UFormGroup>
+      
+          <UButton type="submit">
+            Submit
+          </UButton>
+        </UForm>
+      </div>
+    </UCard>
+  </UModal>
     <div v-if="pending">
       <div class="w-full h-[192px] flex items-center justify-center gap-[12px]">
         <p class="font-sans text-[16px] text-[#000] font-normal">Loading data...</p>
@@ -72,14 +102,28 @@
 
 <script setup lang="ts">
 import DashboardAssetModal from '~/components/Dashboard/DashboardAssetModal.vue';
-import { type AssetData } from '~/types/Asset';
+import type { AssetData } from '~/types/Asset';
 import { Icon } from '@iconify/vue';
+import type { FormError, FormSubmitEvent } from '#ui/types'
+
+const state = reactive({
+  email: undefined,
+  password: undefined
+})
+
+const validate = (state: any): FormError[] => {
+  const errors = []
+  if (!state.email) errors.push({ path: 'email', message: 'Required' })
+  if (!state.password) errors.push({ path: 'password', message: 'Required' })
+  return errors
+}
 
 const currentPage = ref(1);
 const limit = ref(5);
 const isRefreshing = ref(false);
 const selectedAsset = ref({});
 const isModalVisible = ref(false);
+const isCreateModalVisible = ref(false);
 
 const props = defineProps({
   search: String
@@ -148,6 +192,11 @@ const refreshTable = () => {
   // currentPage.value = 1;
   handleRefresh();
 };
+
+async function onSubmit (event: FormSubmitEvent<any>) {
+  // Do something with data
+  console.log(event.data)
+}
 
 </script>
 

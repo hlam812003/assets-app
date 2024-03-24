@@ -1,5 +1,5 @@
 import auth from '../services/auth.services';
-import { type UserInfo } from 'types/User';
+import type { UserInfo } from 'types/User';
 
 export const useUserStore = defineStore('user', {
     state: () => ({

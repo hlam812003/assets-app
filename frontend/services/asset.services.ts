@@ -1,5 +1,5 @@
 import axios from "axios";
-import { type AssetData } from "types/Asset";
+import type { AssetData } from "types/Asset";
 
 axios.defaults.withCredentials = true;
 
