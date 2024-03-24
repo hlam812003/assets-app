@@ -9,7 +9,7 @@
             <SearchBar color="users" placeholder="Input username..." @search="handleSearch" />
         </div>
         <div class="w-full flex items-center justify-center mt-[19px]">
-            <DashboardUserTable :search-query="search"/>
+            <DashboardUserTable :search="search"/>
         </div>    
     </div>
 </template>

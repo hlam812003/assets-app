@@ -19,18 +19,18 @@ const getUsers = async (req, res, next) => {
 		let whereConditions = [];
 
 		if (search) {
-			whereConditions.push(`asset_name LIKE '%${search}%'`);
+			whereConditions.push(`authentication.username LIKE '%${search}%'`);
 		}
 
 		if (isNumber(department)) {
 			whereConditions.push(`department_id = ${department}`);
 		}
 
-		const WHERE_CLAUSE =
-			whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}\n` : "";
+		const WHERE_CLAUSE = whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")} ` : "";
+		const joinClause = `LEFT JOIN authentication ON users.user_id = authentication.user_id`;
 
-		const [count] = await pool.query(`SELECT COUNT(user_id) FROM users\n` + WHERE_CLAUSE);
-		const TOTAL = count[0]["COUNT(user_id)"];
+		const [countResult] = await pool.query(`SELECT COUNT(*) AS count FROM users ${joinClause} ${WHERE_CLAUSE}`);
+		const TOTAL = countResult[0].count;
 		let start = 1;
 		let end = TOTAL;
 
@@ -59,11 +59,16 @@ const getUsers = async (req, res, next) => {
 		}
 
 		const [assets] = await pool.query(
+			// `SELECT users.*, authentication.username 
+            // FROM users 
+            // LEFT JOIN authentication ON users.user_id = authentication.user_id\n` +
+			// 	WHERE_CLAUSE +
+			// 	limitClause
 			`SELECT users.*, authentication.username 
-            FROM users 
-            LEFT JOIN authentication ON users.user_id = authentication.user_id\n` +
-				WHERE_CLAUSE +
-				limitClause
+			FROM users 
+			${joinClause} 
+			${WHERE_CLAUSE} 
+			${limitClause}`
 		);
 
 		res.status(200).json({

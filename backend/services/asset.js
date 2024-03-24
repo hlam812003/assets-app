@@ -215,21 +215,43 @@ const updateAsset = async (req, res, next) => {
 			}
 		}
 
-		const [result] = await pool.query(
-			`UPDATE asset 
+		// const [result] = await pool.query(
+		// 	`UPDATE asset 
 
-			SET 
-			asset_name = '${assetName ? assetName : asset[0].asset_name}', 
-			asset_type = '${assetType ? assetType : asset[0].asset_type}', 
-			asset_img = '${assetImage ? assetImage : asset[0].asset_img}', 
-			description = '${description ? description : asset[0].description}', 
-			purchased_date = '${purchasedDate ? purchasedDate : asset[0].purchased_date}', 
-			price = ${price ? price : asset[0].price}, 
-			department_id = ${departmentId ? departmentId : asset[0].department_id}, 
-			status = '${status ? status : asset[0].status}'
+		// 	SET 
+		// 	asset_name = '${assetName ? assetName : asset[0].asset_name}', 
+		// 	asset_type = '${assetType ? assetType : asset[0].asset_type}', 
+		// 	asset_img = '${assetImage ? assetImage : asset[0].asset_img}', 
+		// 	description = '${description ? description : asset[0].description}', 
+		// 	purchased_date = '${purchasedDate ? purchasedDate : asset[0].purchased_date}', 
+		// 	price = ${price ? price : asset[0].price}, 
+		// 	department_id = ${departmentId ? departmentId : asset[0].department_id}, 
+		// 	status = '${status ? status : asset[0].status}'
 			
-			WHERE asset_id = ${assetId}`
-		);
+		// 	WHERE asset_id = ${assetId}`
+		// );
+
+		if (authenticatedUserRole === ROLE.Manager) {
+			const [result] = await pool.query(
+			  `UPDATE asset SET status = '${status ? status : asset[0].status}' WHERE asset_id = ${assetId}`
+			);
+		  } else if (authenticatedUserRole === ROLE.Admin) {
+			const [result] = await pool.query(
+				`UPDATE asset 
+
+				SET 
+				asset_name = '${assetName ? assetName : asset[0].asset_name}', 
+				asset_type = '${assetType ? assetType : asset[0].asset_type}', 
+				asset_img = '${assetImage ? assetImage : asset[0].asset_img}', 
+				description = '${description ? description : asset[0].description}', 
+				purchased_date = '${purchasedDate ? purchasedDate : asset[0].purchased_date}', 
+				price = ${price ? price : asset[0].price}, 
+				department_id = ${departmentId ? departmentId : asset[0].department_id}, 
+				status = '${status ? status : asset[0].status}'
+			  
+				WHERE asset_id = ${assetId}`
+			);
+		}	  
 
 		const [updatedAsset] = await pool.query(`SELECT * FROM asset WHERE asset_id = ?`, [assetId]);
 

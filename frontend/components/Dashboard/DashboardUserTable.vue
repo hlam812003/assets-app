@@ -8,9 +8,11 @@
         <Icon icon="ant-design:loading-outlined" style="color: black" class="animate-spin text-[18px]"/>
       </div>
     </div>
-    <div v-else-if="!pending && !error && users.length === 0" class="w-full h-[192px] flex items-center justify-center gap-[6px]">
-      <Icon icon="material-symbols:error-outline" style="color: #ff0000" class="text-[18px]"/>
-      <p class="font-sans text-[16px] text-[red] font-normal">An error occurred while loading data.</p>
+    <div v-else-if="!pending && (error || users.length === 0)">
+      <div class="w-full h-[192px] flex items-center justify-center gap-[6px]">
+        <Icon icon="material-symbols:error-outline" style="color: #ff0000" class="text-[18px]"/>
+        <p class="font-sans text-[16px] text-[red] font-normal">No data or users found.</p>
+      </div>
     </div>
     <div v-else class="dashboard__table--wrapper">
         <div class="dashboard__table--header">

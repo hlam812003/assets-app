@@ -8,7 +8,7 @@
             <img src="/assetsIcon.png">
             <p>asset management</p>
         </div>
-        <div class="sidebar__item" :class="{ active: isActive('DashboardUsers') }" @click="setSelectedTab('DashboardUsers')">
+        <div class="sidebar__item" v-if="isAdmin" :class="{ active: isActive('DashboardUsers'), hidden: !isAdmin }" @click="setSelectedTab('DashboardUsers')">
             <img src="/userIcon.png">
             <p>User management</p>
         </div>
@@ -16,6 +16,14 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '~/stores/User';
+
+const userStore = useUserStore();
+
+const isAdmin = computed(() => {
+  return userStore.userInfo?.role === 'Admin';
+});
+
 const emit = defineEmits(['update-page']);
 
 const props = defineProps({
